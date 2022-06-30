@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$ref": "#/definitions/employee",
+  "definitions": {
+    "employee": {
+      "type": "object",
+      "x-amf-examples": {
+        "input": {
+          "name": "Ivana",
+          "surname": "Simic",
+          "counter": 7
+        },
+        "output": {
+          "ID": 3,
+          "name": "Ivana",
+          "surname": "Simic",
+          "counter": 7
+        },
+        "example_0": {
+          "ID": 3,
+          "name": "Nikola",
+          "surname": "Simic",
+          "counter": 7
+        }
+      },
+      "additionalProperties": true,
+      "required": [
+        "name",
+        "surname",
+        "counter"
+      ],
+      "properties": {
+        "ID": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        },
+        "surname": {
+          "type": "string"
+        },
+        "counter": {
+          "type": "integer"
+        }
+      }
+    }
+  }
+}

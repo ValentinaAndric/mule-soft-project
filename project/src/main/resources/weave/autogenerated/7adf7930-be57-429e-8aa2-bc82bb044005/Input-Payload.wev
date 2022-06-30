@@ -1,0 +1,10 @@
+%dw 2.0
+
+type auto_7adf7930_be57_429e_8aa2_bc82bb044005_Input_Payload = {
+  professor: String, 
+  name: String, 
+  ID?: Number, 
+  espb: Number, 
+  _?: Any
+}
+

@@ -1,0 +1,70 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$ref": "#/definitions/schema",
+  "definitions": {
+    "schema": {
+      "items": {
+        "$ref": "#/definitions/employee"
+      },
+      "type": "array",
+      "x-amf-examples": {
+        "output": [
+          {
+            "ID": 1,
+            "name": "Valentina",
+            "surname": "Andric",
+            "counter": 1
+          },
+          {
+            "ID": 2,
+            "name": "Sara",
+            "surname": "Andric",
+            "counter": 6
+          }
+        ]
+      }
+    },
+    "employee": {
+      "type": "object",
+      "x-amf-examples": {
+        "input": {
+          "name": "Ivana",
+          "surname": "Simic",
+          "counter": 7
+        },
+        "output": {
+          "ID": 3,
+          "name": "Ivana",
+          "surname": "Simic",
+          "counter": 7
+        },
+        "example_0": {
+          "ID": 3,
+          "name": "Nikola",
+          "surname": "Simic",
+          "counter": 7
+        }
+      },
+      "additionalProperties": true,
+      "required": [
+        "name",
+        "surname",
+        "counter"
+      ],
+      "properties": {
+        "ID": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        },
+        "surname": {
+          "type": "string"
+        },
+        "counter": {
+          "type": "integer"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,129 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$ref": "#/definitions/exam",
+  "definitions": {
+    "exam": {
+      "type": "object",
+      "x-amf-examples": {
+        "input": {
+          "date": "2015-05-23",
+          "time": "12:30:00",
+          "student": {
+            "ID": 5
+          },
+          "employee": {
+            "ID": 3
+          },
+          "subject": {
+            "ID": 8
+          },
+          "classroom": {
+            "ID": 6
+          }
+        },
+        "output": {
+          "ID": 1,
+          "date": "date-only",
+          "time": "time-only",
+          "student": {
+            "ID": 5
+          },
+          "employee": {
+            "ID": 3
+          },
+          "subject": {
+            "ID": 8
+          },
+          "classroom": {
+            "ID": 6
+          }
+        },
+        "example_0": {
+          "ID": 1,
+          "date": "22-02-2022",
+          "time": "16:45",
+          "student": {
+            "ID": 5
+          },
+          "employee": {
+            "ID": 3
+          },
+          "subject": {
+            "ID": 8
+          },
+          "classroom": {
+            "ID": 6
+          }
+        }
+      },
+      "additionalProperties": true,
+      "required": [
+        "date",
+        "time",
+        "student",
+        "employee",
+        "subject",
+        "classroom"
+      ],
+      "properties": {
+        "ID": {
+          "type": "integer"
+        },
+        "date": {
+          "type": "string"
+        },
+        "time": {
+          "type": "string"
+        },
+        "student": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "ID"
+          ],
+          "properties": {
+            "ID": {
+              "type": "integer"
+            }
+          }
+        },
+        "employee": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "ID"
+          ],
+          "properties": {
+            "ID": {
+              "type": "integer"
+            }
+          }
+        },
+        "subject": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "ID"
+          ],
+          "properties": {
+            "ID": {
+              "type": "integer"
+            }
+          }
+        },
+        "classroom": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "ID"
+          ],
+          "properties": {
+            "ID": {
+              "type": "integer"
+            }
+          }
+        }
+      }
+    }
+  }
+}

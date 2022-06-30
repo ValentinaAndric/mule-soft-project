@@ -1,0 +1,152 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$ref": "#/definitions/schema",
+  "definitions": {
+    "schema": {
+      "items": {
+        "$ref": "#/definitions/student"
+      },
+      "type": "array",
+      "x-amf-examples": {
+        "output": [
+          {
+            "ID": 1,
+            "name": "Valentina",
+            "surname": "Andric",
+            "numberOfIndex": "IT-53 2019",
+            "adress": "Danila Kisa 36",
+            "city": "Novi Sad",
+            "contact": "065/64384",
+            "studyProgram": {
+              "ID": 1,
+              "name": "Inznjerstvo informacionih sistema",
+              "duration": 4
+            },
+            "active": true
+          },
+          {
+            "ID": 2,
+            "name": "Milana",
+            "surname": "Maravic",
+            "numberOfIndex": "IT-65 2019",
+            "adress": "Mise Dimitrijevica 48",
+            "city": "Novi Sad",
+            "contact": "064/676734",
+            "studyProgram": {
+              "ID": 1,
+              "name": "Inznjerstvo informacionih sistema",
+              "duration": 4
+            },
+            "active": false
+          }
+        ]
+      }
+    },
+    "student": {
+      "type": "object",
+      "x-amf-examples": {
+        "input": {
+          "name": "Marija",
+          "surname": "Markovic",
+          "numberOfIndex": "IT-21 2020",
+          "adress": "Puskinova 10",
+          "city": "Novi Sad",
+          "contact": "065/6444477",
+          "studyProgram": {
+            "ID": 3,
+            "name": "E2",
+            "duration": 4
+          },
+          "active": false
+        },
+        "output": {
+          "ID": 5,
+          "name": "Ivana",
+          "surname": "Ivanovic",
+          "numberOfIndex": "IT-44 2020",
+          "adress": "Gogojeva 12",
+          "city": "Novi Sad",
+          "contact": "065/6477777",
+          "studyProgram": {
+            "ID": 2,
+            "name": "Mehatronika",
+            "duration": 4
+          },
+          "active": false
+        },
+        "example_0": {
+          "ID": 6,
+          "name": "Marija",
+          "surname": "Markovic",
+          "numberOfIndex": "IT-21 2020",
+          "adress": "Puskinova 10",
+          "city": "Novi Sad",
+          "contact": "065/6444477",
+          "studyProgram": {
+            "ID": 1,
+            "name": "E2",
+            "duration": 4
+          },
+          "active": false
+        }
+      },
+      "additionalProperties": true,
+      "required": [
+        "name",
+        "surname",
+        "numberOfIndex",
+        "adress",
+        "city",
+        "contact",
+        "studyProgram",
+        "active"
+      ],
+      "properties": {
+        "ID": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        },
+        "surname": {
+          "type": "string"
+        },
+        "numberOfIndex": {
+          "type": "string"
+        },
+        "adress": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "contact": {
+          "type": "string"
+        },
+        "studyProgram": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "ID",
+            "name",
+            "duration"
+          ],
+          "properties": {
+            "ID": {
+              "type": "integer"
+            },
+            "name": {
+              "type": "string"
+            },
+            "duration": {
+              "type": "integer"
+            }
+          }
+        },
+        "active": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

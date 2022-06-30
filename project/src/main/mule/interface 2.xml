@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd ">
+    <apikit:config name="student-api-config" api="resource::4fbfd4a2-95c0-47d1-bad1-9d15bf98d3ed:student-api:1.0.10:raml:zip:student-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <flow name="student-api-console">
+        <http:listener config-ref="HTTP_Listener_config" path="/console/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:response>
+            <http:error-response>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:console config-ref="student-api-config" />
+        <error-handler>
+            <on-error-propagate type="APIKIT:NOT_FOUND">
+                <ee:transform>
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Resource not found"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">404</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+        </error-handler>
+    </flow>
+    <flow name="put:\studyProgram\(ID):application\json:student-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="bc2ed410-393d-4551-b4b6-6678f379d379" name="updateStudyProgram" />
+    </flow>
+    <flow name="put:\subject\(ID):application\json:student-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="76df4fd6-36e7-4b80-a74e-9b87cbaa8edb" name="updateSubject" />
+    </flow>
+    <flow name="put:\classroom\(ID):application\json:student-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="f9b2421f-5627-472e-b4a0-4c7d1e9659cf" name="updateClassroom" />
+    </flow>
+    <flow name="put:\employee\(ID):application\json:student-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="29d224f8-88ca-480a-8145-c64d9a1198ca" name="updateEmployee" />
+    </flow>
+    <flow name="put:\students\(ID):application\json:student-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="9ef30740-cf3a-489c-add5-51a05a7a8a44" name="updateStudent" />
+    </flow>
+    <flow name="put:\exam\(ID):application\json:student-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="b521e351-e31b-4378-b96a-ed8f2a68aee6" name="updateExam" />
+    </flow>
+    <flow name="put:\paymentSlip\(ID):application\json:student-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="26db7d28-3bf8-4467-a90e-cfa8175b810a" name="updatePaymentSlip" />
+    </flow>
+    <flow name="delete:\subject\(ID):student-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="269b26e1-a824-42fe-aea5-b29a8e644f65" name="deleteSubject" />
+    </flow>
+    <flow name="delete:\paymentSlip\(ID):student-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="c508a060-6875-474c-a36f-292ddc676e3a" name="deletePaymentSlip" />
+    </flow>
+    <flow name="delete:\exam\(ID):student-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="113cb534-e4eb-4a05-89a8-ab958c3cb86b" name="deleteExam" />
+    </flow>
+    <flow name="delete:\studyProgram\(ID):student-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="c2a929bb-3472-499b-81d0-f2dd1f7c6b31" name="deleteStudyProgram" />
+    </flow>
+    <flow name="delete:\employee\(ID):student-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="5b0c8e4f-f6a2-45ea-92b9-98e44d2c3af8" name="deleteEmployee" />
+    </flow>
+    <flow name="delete:\classroom\(ID):student-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="9750942e-061e-41e6-8141-16646919cd86" name="deleteClassroom" />
+    </flow>
+    <flow name="delete:\students\(ID):student-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="f404d4b2-7d6e-434c-8c0f-35b8eeb87c14" name="deleteStudent" />
+    </flow>
+    <flow name="get:\classroom:student-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="3ca5f815-fcc5-4da9-8eaf-57429ad0409e" name="getAllClassroom" />
+    </flow>
+    <flow name="get:\employee:student-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="96c840f8-b6de-4c64-9da5-d2b34ccaf172" name="getAllEmployee" />
+    </flow>
+    <flow name="get:\exam:student-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="89dd144b-c835-4ccd-9a2c-8cff0484b23b" name="getAllExam" />
+    </flow>
+    <flow name="get:\paymentSlip:student-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="bae442df-0547-4c86-8e3b-2564b618640b" name="getAllPaymentSlip" />
+    </flow>
+    <flow name="get:\students:student-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="52d37189-0dc6-4b3c-bb2b-e5b2faee5f39" name="getAllStudent" />
+    </flow>
+    <flow name="get:\studyProgram:student-api-config" doc:id="4367c31a-cda2-4354-8b2d-7101d4ff1e94">
+        <flow-ref doc:name="Flow Reference" doc:id="de1c4b2c-3715-4d12-b14a-27b21f15666f" name="getAllStudyProgram" />
+    </flow>
+    <flow name="get:\subject:student-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="dd8c3344-754a-44a2-bd5a-51b05928ffc9" name="getAllSubject" />
+    </flow>
+    <flow name="get:\students\(ID):student-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="6b8ffe2b-cd60-470f-9ff3-e372497bef0d" name="getStudentByID" />
+    </flow>
+    <flow name="get:\employee\(ID):student-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="063bda88-20f3-4f6e-95f8-3bd0611c7f24" name="getEmployeeByID" />
+    </flow>
+    <flow name="get:\subject\(ID):student-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="ff9314ba-9000-4d89-a89c-7cccbf858738" name="getSubjectByID" />
+    </flow>
+    <flow name="get:\exam\(ID):student-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="6b991a6f-6885-4b7a-aaf4-0bb69e8d58a7" name="getExamByID" />
+    </flow>
+    <flow name="get:\classroom\(ID):student-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="ca46cfed-7d7f-4328-803a-e0d97c9b60fc" name="getClassroomByID" />
+    </flow>
+    <flow name="get:\paymentSlip\(ID):student-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="3b6e4613-bc36-400f-ac53-3c97e8e06135" name="getPaymenSlipByID" />
+    </flow>
+    <flow name="get:\studyProgram\(ID):student-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="65e99076-ceb0-49d3-a9df-731654cd3690" name="getStudyProgramByID" />
+    </flow>
+    <flow name="post:\classroom:application\json:student-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="6fdc4172-a695-4d6e-a4ad-4ce67fa8a305" name="postClassroom" />
+    </flow>
+    <flow name="post:\employee:application\json:student-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="b34a4a64-f6b4-4715-9102-768ee245877c" name="postEmployee" />
+    </flow>
+    <flow name="post:\exam:application\json:student-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="c9cba0ca-ce3e-4fc1-9fcc-9830e2c401f0" name="postExam" />
+    </flow>
+    <flow name="post:\paymentSlip:application\json:student-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="4ff14fd8-d6ff-402a-951e-fa5e2376236f" name="postPaymentSlip" />
+    </flow>
+    <flow name="post:\students:application\json:student-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="09c79e74-97c8-477c-a286-78b12bcedf2f" name="postStudent" />
+    </flow>
+    <flow name="post:\studyProgram:application\json:student-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="e9ab24d1-73a4-4eab-80b1-14f07b042af6" name="postStudyProgram" />
+    </flow>
+    <flow name="post:\subject:application\json:student-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="0b8dbae0-3aec-49a1-845d-e15722ee8c4d" name="postSubject" />
+    </flow>
+    <flow name="Copy_of_mainFlow" doc:id="c2f7e0e9-a1e8-4496-ad7e-2565cbaf05cc">
+        <http:listener doc:name="Copy_of_Copy_of_Listener" doc:id="b1d717c5-e09c-4662-b646-26726e4368fe" config-ref="HTTP_Listener_config" path="/api/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body><![CDATA[#[payload]]]></http:body>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:router doc:name="Copy_of_Copy_of_APIkit Router" doc:id="8f757307-7fe4-4164-8c5a-ec70a5d8c961" config-ref="student-api-config" />
+        <error-handler>
+            <on-error-propagate enableNotifications="true" logException="true" doc:name="Copy_of_Copy_of_On Error Propagate" doc:id="6288e318-ca01-46be-be47-17ef9e247425" type="APIKIT:BAD_REQUEST">
+                <ee:transform doc:name="Copy_of_Copy_of_Transform Message" doc:id="78413ec5-dd3c-4fe9-91f1-6dfba402cde6">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Bad request"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[400]]></ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate enableNotifications="true" logException="true" doc:name="Copy_of_Copy_of_On Error Propagate" doc:id="bcded092-a76b-4d92-bce7-20972f1fff0d" type="APIKIT:NOT_FOUND">
+                <ee:transform doc:name="Copy_of_Copy_of_Transform Message" doc:id="d69df0de-ab34-4158-9e92-6182093886e2">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Resource not found"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[404]]></ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate enableNotifications="true" logException="true" doc:name="Copy_of_Copy_of_On Error Propagate" doc:id="ea5d953b-47d8-4794-b7b3-6117f3ccb8b4" type="APIKIT:METHOD_NOT_ALLOWED">
+                <ee:transform doc:name="Copy_of_Copy_of_Transform Message" doc:id="1bd60734-30f7-4d4c-9ab4-8ceabbbb0e08">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Method not allowed"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[405]]></ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate enableNotifications="true" logException="true" doc:name="Copy_of_Copy_of_On Error Propagate" doc:id="4b05e030-46d5-40d0-9bed-018edb4e65da" type="APIKIT:NOT_ACCEPTABLE">
+                <ee:transform doc:name="Copy_of_Copy_of_Transform Message" doc:id="d2d83d41-77fd-4e38-8287-6b0e960b5429">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Not acceptable"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[406]]></ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate enableNotifications="true" logException="true" doc:name="Copy_of_Copy_of_On Error Propagate" doc:id="33176ad8-76f4-4c8e-b36b-71d5fdddb909" type="APIKIT:UNSUPPORTED_MEDIA_TYPE">
+                <ee:transform doc:name="Copy_of_Copy_of_Transform Message" doc:id="f56c5060-0af5-47e5-b9cc-d13203c876e4">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Unsupported media type"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[415]]></ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate enableNotifications="true" logException="true" doc:name="Copy_of_Copy_of_On Error Propagate" doc:id="4e52d967-b806-4a94-9cf6-a4c2c538ba61" type="APIKIT:NOT_IMPLEMENTED">
+                <ee:transform doc:name="Copy_of_Copy_of_Transform Message" doc:id="80dcf990-0ed7-4f51-8694-034ebd3983ef">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Not Implemented"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[501]]></ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+        </error-handler>
+    </flow>
+</mule>

@@ -1,0 +1,20 @@
+%dw 2.0
+
+type auto_a52a74c1_41b1_47b9_bc8f_df30757a0a54_Input_Payload = {
+  numberOfIndex: String, 
+  city: String, 
+  surname: String, 
+  contact: String, 
+  name: String, 
+  active: Boolean, 
+  adress: String, 
+  ID?: Number, 
+  studyProgram: {
+    duration: Number, 
+    name: String, 
+    ID: Number, 
+    _?: Any
+  }, 
+  _?: Any
+}
+

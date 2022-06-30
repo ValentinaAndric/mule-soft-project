@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension-documentation>
+    <configs>
+        <config name="config">
+            <description><![CDATA[Default configuration]]></description>
+            <parameters>
+                <parameter name="name">
+                    <description><![CDATA[The identifier of this element used to reference it in other components]]></description>
+                </parameter>
+            </parameters>
+        </config>
+    </configs>
+    <connections/>
+    <extension name="Tracing">
+        <description><![CDATA[Mule module extension for traceability features, including customizable MDC and CorrelationID]]></description>
+        <parameters/>
+    </extension>
+    <operations>
+        <operation name="clearLoggingVariables">
+            <description><![CDATA[Clears all the custom variables from the event logging context. It will *not* remove the correlation id nor the current event processor, since those variables are managed internally by mule runtime.]]></description>
+            <parameters>
+                <parameter name="errorMappings">
+                    <description><![CDATA[Set of error mappings]]></description>
+                </parameter>
+            </parameters>
+        </operation>
+        <operation name="removeLoggingVariable">
+            <description><![CDATA[Removes a variable from the event logging context.]]></description>
+            <parameters>
+                <parameter name="variableName">
+                    <description><![CDATA[Name from the logging variable to be removed.]]></description>
+                </parameter>
+                <parameter name="errorMappings">
+                    <description><![CDATA[Set of error mappings]]></description>
+                </parameter>
+            </parameters>
+        </operation>
+        <operation name="setLoggingVariable">
+            <description><![CDATA[Adds a new variable in the event logging context. It will be present in the next operations executions for this event.]]></description>
+            <parameters>
+                <parameter name="variableName">
+                    <description><![CDATA[Name from the logging variable to be added.]]></description>
+                </parameter>
+                <parameter name="value">
+                    <description><![CDATA[Value to add to the logging context.]]></description>
+                </parameter>
+                <parameter name="errorMappings">
+                    <description><![CDATA[Set of error mappings]]></description>
+                </parameter>
+            </parameters>
+        </operation>
+        <operation name="withCorrelationId">
+            <description><![CDATA[Scope that creates a process the inner chain modifying the current correlation id. After finishing its execution The correlation ID wil go back to the previous one.]]></description>
+            <parameters>
+                <parameter name="correlationId">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="outputMimeType">
+                    <description><![CDATA[The mime type of the payload that this operation outputs.]]></description>
+                </parameter>
+                <parameter name="outputEncoding">
+                    <description><![CDATA[The encoding of the payload that this operation outputs.]]></description>
+                </parameter>
+                <parameter name="target">
+                    <description><![CDATA[The name of a variable on which the operation's output will be placed]]></description>
+                </parameter>
+                <parameter name="targetValue">
+                    <description><![CDATA[An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable]]></description>
+                </parameter>
+                <parameter name="errorMappings">
+                    <description><![CDATA[Set of error mappings]]></description>
+                </parameter>
+            </parameters>
+        </operation>
+    </operations>
+    <sources/>
+    <types/>
+</extension-documentation>

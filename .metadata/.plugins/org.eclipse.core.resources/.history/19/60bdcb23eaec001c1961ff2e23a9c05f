@@ -1,0 +1,802 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
+	<flow name="getAllStudent" doc:id="5b7cf8dd-fc76-4acd-be9c-8db2dbe13f2c">
+		<choice doc:name="Check if header value added" doc:id="4947074d-1b0e-4337-b274-4f3fc84b64ab" >
+			<when expression="#[message.attributes.headers['active'] != null]">
+				<choice doc:name="Check if header added correctly" doc:id="997ae99e-8083-4980-92c5-bc807d1449b2" >
+					<when expression="#[message.attributes.headers['active'] == 'true' or  message.attributes.headers['active'] == 'false']">
+						<db:select doc:name="Select student by header " doc:id="e5696ef2-187c-470a-b232-15ba5ebb066e" config-ref="Database_Config">
+            <db:sql><![CDATA[select * from
+student
+where active = :active ]]></db:sql>
+			<db:input-parameters><![CDATA[#[{'active' : attributes.headers['active']}]]]></db:input-parameters>
+        </db:select>
+						<ee:transform doc:name="Return students" doc:id="46bb1025-8006-4d95-87ce-d14b6cd4ee34">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	ID: payload01.id,
+	name: payload01.name,
+	surname: payload01.surname,
+	numberOfIndex: payload01.numberofindex,
+	adress: payload01.adress,
+	city: payload01.city,
+	contact: payload01.contact,
+	studyProgram: payload01.studyprogram,
+	active: payload01.active default true
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+					</when>
+					<otherwise>
+						<ee:transform doc:name="Error message" doc:id="fc5d6cb3-30d8-4729-9c6e-b52ebc0eb873" >
+							<ee:message >
+								<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message" : "Bad request"
+}]]></ee:set-payload>
+							</ee:message>
+						</ee:transform>
+					</otherwise>
+				</choice>
+			</when>
+			<otherwise >
+				<db:select doc:name="get all students" doc:id="4105b756-72e6-4a81-97c2-30671bb61ad3" config-ref="Database_Config" >
+					<db:sql ><![CDATA[select * from
+student
+]]></db:sql>
+				</db:select>
+				<ee:transform doc:name="Return students" doc:id="7a3deefb-a8f9-4d38-bafb-9e7aa851d66d" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	ID: payload01.id,
+	name: payload01.name,
+	surname: payload01.surname,
+	numberOfIndex: payload01.numberofindex,
+	adress: payload01.adress,
+	city: payload01.city,
+	contact: payload01.contact,
+	studyProgram: payload01.studyprogram,
+	active: payload01.active default true
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</otherwise>
+		</choice>
+    </flow>
+	
+	<flow name="getAllSubject" doc:id="45c6886f-77cc-44d5-90e3-811df27de78d">
+        <db:select doc:name="Select subjects from database" doc:id="29d31b4a-87a3-4550-b7c8-3bc516055e2c" config-ref="Database_Config">
+            <db:sql><![CDATA[select * 
+from subject]]></db:sql>
+        </db:select>
+        <ee:transform doc:name="return subjects" doc:id="5397eac8-e1f3-49dd-bfdc-6c7b1b688668">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	ID: payload01.id,
+	name: payload01.name default "",
+	professor: payload01.professor default "",
+	espb: payload01.espb
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+	<flow name="getAllClassroom" doc:id="c7a9ec16-03bb-4e2d-b1c7-5a44f31c743f">
+        <db:select doc:name="Select clasrooms from database" doc:id="0b5c341e-2079-456c-bcb4-02ecd89aa657" config-ref="Database_Config">
+            <db:sql><![CDATA[select *
+from classroom]]></db:sql>
+        </db:select>
+        <ee:transform doc:name="Return classrooms" doc:id="967873c8-7333-4c7a-b939-8b31b695ea3c">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	ID: payload01.id,
+	numberOfClassroom: payload01.numberofclassroom
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+    <flow name="getAllExam" doc:id="1dda0bce-d97d-453d-83b9-3bf5fac7de56">
+        <db:select doc:name="Select exams from database" doc:id="6ef4bd44-d6da-4c73-baba-c0df034fac17" config-ref="Database_Config">
+            <db:sql><![CDATA[select *
+from exam]]></db:sql>
+        </db:select>
+        <ee:transform doc:name="Return exams" doc:id="7772d85f-85ad-4d34-a98b-e7f4f5474079">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	ID: payload01.id,
+	date: payload01.date as String,
+	time: payload01.time as String,
+	student: payload01.student,
+	employee: payload01.employee,
+	subject: payload01.subject,
+	classroom: payload01.classroom
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+    <flow name="getAllPaymentSlip" doc:id="ee7cbd5b-f50b-45f5-bad2-95763aa089df">
+        <db:select doc:name="Select payment slips from database" doc:id="9abad04c-eff8-401f-9a48-d2f44dd41f45" config-ref="Database_Config">
+            <db:sql><![CDATA[select *
+from paymentSlip]]></db:sql>
+        </db:select>
+        <ee:transform doc:name="Return payment slips" doc:id="be106b00-cb9d-43aa-ad78-565eab45955f">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	ID: payload01.id,
+	bankAccountNumber: payload01.bankaccountnumber,
+	sum: payload01.sum,
+	student: {
+		ID: payload01.student
+	},
+	employee: {
+		ID: payload01.employee
+	}
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+    <flow name="getAllStudyProgram" doc:id="751ef0d0-05d0-4c29-9ced-949e18a03504">
+        <db:select doc:name="Select study program from database" doc:id="c43ffe8a-cc0a-4c8b-ad78-181696b824d8" config-ref="Database_Config">
+            <db:sql><![CDATA[select * 
+from studyProgram]]></db:sql>
+        </db:select>
+        <ee:transform doc:name="Return study program" doc:id="9ffd5d8e-3151-4f26-9623-7aa09f6a6e8d">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	ID: payload01.id,
+	name: payload01.name,
+	duration: payload01.duration
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+	<flow name="getAllEmployee" doc:id="77300adc-e6e4-4a66-94cb-ed48f8b3aef3">
+		<choice doc:name="Select employees from database" doc:id="eca74c36-4061-4c47-bcfd-e1d2cd18779b" >
+			<when expression="#[message.attributes.queryParams['gender'] == 'm']">
+				<db:select doc:name="male" doc:id="a7ffd6c0-3325-4aba-afb0-6afed50ebb74" config-ref="Database_Config">
+					<db:sql ><![CDATA[select * from employee
+where gender = :gender]]></db:sql>
+					<db:input-parameters ><![CDATA[#[{"gender" : 'm'}]]]></db:input-parameters>
+				</db:select>
+				<ee:transform doc:name="Transform Message" doc:id="d23961f9-1b7c-4e8b-be5c-8f9b8ce8972e" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	ID: payload01.id,
+	name: payload01.name,
+	surname: payload01.surname,
+	gender: payload01.gender default "",
+	counter: payload01.counter
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</when>
+			<when expression="#[message.attributes.queryParams['gender'] == &quot;f&quot;]">
+				<db:select doc:name="female" doc:id="cc4af0c0-23e5-46f1-931c-8e56ee0741b2" config-ref="Database_Config">
+					<db:sql ><![CDATA[select * from employee
+where gender = :gender]]></db:sql>
+					<db:input-parameters ><![CDATA[#[{'gender' : 'f'}]]]></db:input-parameters>
+				</db:select>
+				<ee:transform doc:name="Transform Message" doc:id="284c24d6-501c-4aeb-9094-e03afd121678" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	ID: payload01.id,
+	name: payload01.name,
+	surname: payload01.surname,
+	gender: payload01.gender default "",
+	counter: payload01.counter
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</when>
+			<otherwise >
+				<db:select doc:name="other" doc:id="75e55017-a831-4e2f-8d64-0a01e4ac87af" config-ref="Database_Config">
+			<db:sql><![CDATA[select *
+from employee]]></db:sql>
+		</db:select>
+				<ee:transform doc:name="Transform Message" doc:id="c875c57d-2a21-4496-8cd0-15a77ae1ddbb" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	ID: payload01.id,
+	name: payload01.name,
+	surname: payload01.surname,
+	gender: payload01.gender default "",
+	counter: payload01.counter
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</otherwise>
+		</choice>
+	</flow>
+	<flow name="getClassroomByID" doc:id="8ff622f1-ddc2-43e8-9a73-ef5fd311a84d">
+        <db:select doc:name="Select classroom by id from " doc:id="174d7b78-39eb-4936-a509-60ac5a018a2f" config-ref="Database_Config">
+            <db:sql><![CDATA[select *
+from classroom
+where ID = :ID]]></db:sql>
+            <db:input-parameters><![CDATA[#[{'ID' : attributes.uriParams.ID}]]]></db:input-parameters>
+        </db:select>
+        <validation:is-not-empty-collection doc:name="Is not empty collection" doc:id="9224483c-8d97-4fa3-b716-ffa1bab4f5b8" />
+		<ee:transform doc:name="Transform Message" doc:id="6494690c-e105-4718-89bd-497336b40094">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	ID: payload01.id,
+	numberOfClassroom: payload01.numberofclassroom
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+		<error-handler ref="NotFound" />
+    </flow>
+	<flow name="getStudentByID" doc:id="3d0d250a-cd95-4f0b-849c-75291e70c7be" >
+		<db:select doc:name="Select student by ID from database " doc:id="7a2b3a64-165c-49b7-a783-e8bba9774c43" config-ref="Database_Config" >
+			<db:sql ><![CDATA[select *
+from student
+where ID = :ID]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{'ID' : attributes.uriParams.ID}]]]></db:input-parameters>
+		</db:select>
+		<validation:is-not-empty-collection doc:name="Is not empty collection" doc:id="6711396c-21f3-42ba-9897-f4d361c9e02b" />
+		<ee:transform doc:name="Return student" doc:id="154f0c78-d57f-4c32-af74-29c4814bc621" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	ID: payload01.id,
+	name: payload01.name,
+	surname: payload01.surname,
+	numberOfIndex: payload01.numberofindex,
+	adress: payload01.adress,
+	city: payload01.city,
+	contact: payload01.contact,
+	studyProgram: payload01.studyprogram,
+	active: payload01.active default true
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<file:write doc:name="Write" doc:id="9bfed599-b46a-4bbf-af68-f88575327acd" config-ref="File_Config2" path="#['File'++(now()as String{format:'yyyy-MM-dd-hh-mm-ss'})++'.json']" mode="CREATE_NEW"/>
+		<error-handler ref="NotFound" />
+	</flow>
+	<flow name="postPaymentSlip" doc:id="ddff33c3-0557-4d11-846d-0ecc49d926eb" >
+		<set-variable value="#[message.payload.bankAccountNumber]" doc:name="Set bank account number" doc:id="a3694bfd-0352-4573-8a77-45d2c5d81925" variableName="bankAcc"/>
+		<db:select doc:name="Check if payment slip with this ID exists in database" doc:id="485c166d-891b-4cc9-a137-3679e1f02f31" config-ref="Database_Config">
+			<db:sql ><![CDATA[select bankAccountNumber from paymentSlip
+where bankAccountNumber = :bankAccountNumber]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{'bankAccountNumber' : vars.bankAcc}]]]></db:input-parameters>
+		</db:select>
+		<set-payload value="#[payload]" doc:name="Set payload from select" doc:id="7fd7e934-3027-4b08-aa2c-6e8e327edc16" />
+		<choice doc:name="Check" doc:id="3612b74b-67cf-4993-9d67-64defba551d4" >
+			<when expression="#[payload != null]">
+				<raise-error doc:name="Raise error" doc:id="2ae239ad-1534-47f0-946e-ff5b3f1151d3" type="APIKIT:BAD_REQUEST" description="Bad request"/>
+			</when>
+			<otherwise >
+				<db:insert doc:name="Insert into payment slip" doc:id="e8a92f62-6278-474a-8a3f-8de06cffa0fd" config-ref="Database_Config">
+			<db:sql><![CDATA[insert into paymentSlip (bankAccountNumber, sum, student, employee) values
+(:bankAccountNumber, :sum, :student, :employee)]]></db:sql>
+			<db:input-parameters><![CDATA[#[{	"bankAccountNumber" : payload.bankAccountNumber,
+	"sum" : payload.sum,
+	"student" : payload.student.ID,
+	"employee" : payload.employee.ID
+}]]]></db:input-parameters>
+		</db:insert>
+			</otherwise>
+		</choice>
+	</flow>
+	<flow name="write" doc:id="45f1b61d-96c1-4656-b2fd-043c44103af6" >
+		<db:listener table="studyprogram" doc:name="On Table Row" doc:id="92e3802f-d8cb-4788-8dd5-523ac3bae697" config-ref="Database_Config" watermarkColumn="id" idColumn="id">
+			<scheduling-strategy >
+				<fixed-frequency />
+			</scheduling-strategy>
+		</db:listener>
+		<choice doc:name="Chech name and duration of study program" doc:id="64eb0cee-2154-4174-a5fb-5adc08f4d6fd" >
+			<when expression='#[payload.duration == 3 and payload.name == "IIS"]'>
+				<set-variable value="#[message.payload.id]" doc:name="Set ID" doc:id="f12652af-a8ae-41ca-94e7-8cb0c048d9a1" variableName="id"/>
+				<db:update doc:name="Update study program" doc:id="ee74794f-4086-4f45-9fc4-e440a84f4090" config-ref="Database_Config">
+					<db:sql ><![CDATA[update studyProgram
+set duration = 4
+where id = :ID]]></db:sql>
+					<db:input-parameters ><![CDATA[#[{ 'ID' : vars.id}]]]></db:input-parameters>
+				</db:update>
+				<db:select doc:name="Select study program" doc:id="58fc2d1a-f9d2-42b3-8057-41701728d347" config-ref="Database_Config">
+					<db:sql ><![CDATA[select * from
+studyProgram
+where id = :ID]]></db:sql>
+					<db:input-parameters ><![CDATA[#[{'ID' : vars.id}]]]></db:input-parameters>
+				</db:select>
+				<ee:transform doc:name="Return study program" doc:id="d0a9dd84-90b6-4709-9be4-372b8a4a5736" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	ID: payload01.id,
+	name: payload01.name,
+	duration: payload01.duration
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<file:write doc:name="Write into file" doc:id="62cd3753-8593-4eb3-b0b0-25caec6c3c34" config-ref="File_Config" path="#['File'++(now()as String{format:'yyyy-MM-dd-hh-mm-ss'})++'.json']" mode="CREATE_NEW"/>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Return study program" doc:id="0f89d574-9630-48c4-94f7-40c92f5ed1fc" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+---
+{
+	StudyProgram: {
+		id: payload.id,
+		name: payload.name,
+		duration: payload.duration
+	}
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<file:write doc:name="Write into file" doc:id="9f7fc245-c728-478d-969e-0c761d42ddea" config-ref="File_Config1" path="#['File'++(now()as String{format:'yyyy-MM-dd-hh-mm-ss'})++'.xml']" mode="CREATE_NEW"/>
+			</otherwise>
+		</choice>
+	</flow>
+	<error-handler name="NotFound" doc:id="7cfaa9e5-6abe-4f34-80e0-80428a26f05d" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On error propagate" doc:id="1509f5da-5fdd-4c61-8fa5-99e2348e0061" type="VALIDATION:EMPTY_COLLECTION" >
+			<set-payload value="#[error.description]" doc:name="Set error descriotion" doc:id="96808234-0a70-4f98-b1ae-7c5588a44ccb" />
+			<set-variable value="404" doc:name="httpStatus" doc:id="fe1a11ef-ff0b-484a-9944-2f40d25c0c96" variableName="httpStatus"/>
+		</on-error-propagate>
+	</error-handler>
+	<flow name="getSubjectByID" doc:id="423103d8-0d34-4711-8142-7560115b62ec">
+        <db:select doc:name="Select subject by ID" doc:id="d315f189-d515-4e08-bd40-2e22f14608f8" config-ref="Database_Config">
+            <db:sql><![CDATA[select *
+from subject
+where ID = :ID]]></db:sql>
+            <db:input-parameters><![CDATA[#[{'ID': attributes.uriParams.ID}]]]></db:input-parameters>
+        </db:select>
+        <validation:is-not-empty-collection doc:name="Is not empty collection" doc:id="9d60c7f0-fb54-480f-8a38-26481e545fe2" />
+		<ee:transform doc:name="return subject" doc:id="e8748549-c63b-4a5a-95ff-4fc058ca3aea">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	ID: payload01.id,
+	name: payload01.name default "",
+	professor: payload01.professor default "",
+	espb: payload01.espb
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+		<error-handler ref="NotFound" />
+    </flow>
+    <flow name="getStudyProgramByID" doc:id="92610732-a97a-439a-a87e-859dba58beae">
+        <db:select doc:name="Select study program by ID" doc:id="a54a15cf-cd96-44ef-99c6-ab2075d55298" config-ref="Database_Config">
+            <db:sql><![CDATA[select *
+from studyProgram
+where ID = :ID]]></db:sql>
+            <db:input-parameters><![CDATA[#[{'ID' : attributes.uriParams.ID}]]]></db:input-parameters>
+        </db:select>
+        <validation:is-not-empty-collection doc:name="Is not empty collection" doc:id="cbb9037e-85c9-40cf-805a-23836ad1c350" />
+		<ee:transform doc:name="Return study program" doc:id="9f251c12-3712-43c7-aa5f-3fe52a1e61d1">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	ID: payload01.id,
+	name: payload01.name,
+	duration: payload01.duration
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+		<error-handler ref="NotFound" />
+    </flow>
+    <flow name="getExamByID" doc:id="a4227df5-6f45-40ef-ba57-1e8563f838e8">
+        <db:select doc:name="Select exam by ID" doc:id="206759f3-2b36-403e-a2a2-88844ef4e388" config-ref="Database_Config">
+            <db:sql><![CDATA[select * 
+from exam
+where ID = :ID]]></db:sql>
+            <db:input-parameters><![CDATA[#[{'ID' : attributes.uriParams.ID}]]]></db:input-parameters>
+        </db:select>
+        <validation:is-not-empty-collection doc:name="Is not empty collection" doc:id="c848da93-e54f-4d09-a8a2-7bcf23158847" />
+		<ee:transform doc:name="Return exam" doc:id="2117a62a-6032-4bd4-9da4-03da0820c17f">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	ID: payload01.id,
+	date: payload01.date as String,
+	time: payload01.time as String,
+	student: payload01.student,
+	employee: payload01.employee,
+	subject: payload01.subject,
+	classroom: payload01.classroom
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+		<error-handler ref="NotFound" />
+    </flow>
+    <flow name="getPaymenSlipByID" doc:id="8390ef9e-ad42-489e-adce-14d62aab25e5">
+        <db:select doc:name="Select payment slip by iD" doc:id="e0973de6-0846-4628-8536-c20ceed346cf" config-ref="Database_Config">
+            <db:sql><![CDATA[select *
+from paymentSlip
+where ID= :ID]]></db:sql>
+            <db:input-parameters><![CDATA[#[{'ID' : attributes.uriParams.ID}]]]></db:input-parameters>
+        </db:select>
+        <validation:is-not-empty-collection doc:name="Is not empty collection" doc:id="a31602a2-dd79-44be-b3fb-a5f63b40e296" />
+		<ee:transform doc:name="Return payment slip" doc:id="26a86027-ec36-4b57-9f9e-59a096fa6f9c">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	ID: payload01.id,
+	bankAccountNumber: payload01.bankaccountnumber,
+	sum: payload01.sum,
+	student: payload01.student,
+	employee: payload01.employee
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+		<error-handler ref="NotFound" />
+    </flow>
+    <flow name="getEmployeeByID" doc:id="1b5fba4c-8854-470a-8f38-7afe8d50a30a">
+        <db:select doc:name="Select employee by ID" doc:id="1c759357-c9f4-4b7e-858b-d4f3c76181f7" config-ref="Database_Config">
+            <db:sql><![CDATA[select *
+from employee
+where ID= :ID]]></db:sql>
+            <db:input-parameters><![CDATA[#[{'ID' : attributes.uriParams.ID}]]]></db:input-parameters>
+        </db:select>
+        <validation:is-not-empty-collection doc:name="Is not empty collection" doc:id="0e8358e6-8b99-455a-a5a3-ae5ebbd87c84" />
+		<ee:transform doc:name="Return employee" doc:id="88259e7e-3d70-42e5-a5ce-94c4449a1602">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	ID: payload01.id,
+	name: payload01.name,
+	surname: payload01.surname,
+	gender: payload01.gender default "",
+	counter: payload01.counter
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+		<error-handler ref="NotFound" />
+    </flow>
+	<flow name="postClassroom" doc:id="5142b1ad-76b8-4561-bc43-718eeca64498">
+        <db:insert doc:name="Insert into classroom" doc:id="daa83376-6022-4d2f-9a95-b3213ebabc72" config-ref="Database_Config">
+            <db:sql><![CDATA[insert into classroom (numberOfClassroom) values (:numberOfClassroom)]]></db:sql>
+            <db:input-parameters><![CDATA[#[{'numberOfClassroom' : payload.numberOfClassroom}]]]></db:input-parameters>
+        </db:insert>
+    </flow>
+    <flow name="postEmployee" doc:id="16f6ddd5-7a8e-4f03-8b55-fe460aab47b6">
+        <db:insert doc:name="Insert into classroom" doc:id="121c39fe-6321-4727-b3bc-c168f9a97a61" config-ref="Database_Config">
+            <db:sql><![CDATA[insert into employee (name, surname, counter,gender) values (:name, :surname, :counter, :gender)]]></db:sql>
+            <db:input-parameters><![CDATA[#[{	"name" : payload.name,
+	"surname": payload.surname,
+	"counter" : payload.counter,
+	"gender" : payload.gender
+}]]]></db:input-parameters>
+        </db:insert>
+    </flow>
+    <flow name="postSubject" doc:id="15828605-1630-4847-b483-5d485f95c44d">
+        <db:insert doc:name="Insert into subject" doc:id="e030f766-7f72-4937-8c2e-b4a0758b9ce3" config-ref="Database_Config">
+            <db:sql><![CDATA[insert into subject (name, professor, espb) values (:name, :professor, :espb)]]></db:sql>
+            <db:input-parameters><![CDATA[#[{	"name" : payload.name,
+	"professor" : payload.professor,
+	"espb" : payload.espb
+}]]]></db:input-parameters>
+        </db:insert>
+    </flow>
+	<flow name="postStudyProgram" doc:id="08667ff9-802d-4de6-8b42-3f34bdebdfe3">
+        <db:insert doc:name="Insert into study program" doc:id="f87b8512-bed3-4108-9180-b3f41033e16d" config-ref="Database_Config">
+            <db:sql><![CDATA[insert into studyProgram (name, duration) values (:name, :duration)]]></db:sql>
+            <db:input-parameters><![CDATA[#[{	"name" : payload.name,
+	"duration" : payload.duration
+}]]]></db:input-parameters>
+        </db:insert>
+    </flow>
+	<flow name="postExam" doc:id="ca6be247-245f-4ea6-bf6f-28bd28d32614">
+        <db:insert doc:name="Insert into exam" doc:id="247f5965-d77e-420a-b494-8833cac6a495" config-ref="Database_Config">
+            <db:sql><![CDATA[insert into exam (date, time, student, employee,subject, classroom) values (:date, :time,:student,
+:employee,:subject, :classroom)]]></db:sql>
+            <db:input-parameters><![CDATA[#[{	"date" : payload.date,
+	"time": payload.time,
+	"student" : payload.student.ID,
+	"employee" : payload.employee.ID,
+	"subject" : payload.subject.ID,
+	"classroom" : payload.classroom.ID
+	
+}]]]></db:input-parameters>
+        </db:insert>
+    </flow>
+    <flow name="postStudent" doc:id="e7eaab6f-bc45-4edf-a998-ccc30c3d71eb" >
+		<db:insert doc:name="Insert into student" doc:id="d25e623c-0559-4c01-9bc6-9f8c17118cf5" config-ref="Database_Config" >
+			<db:sql ><![CDATA[INSERT INTO student (name, surname, numberOfIndex, adress, city, contact,
+studyProgram, active) VALUES (:name, :surname, :numberOfIndex, :adress, :city, :contact, 
+:studyProgram, :active)]]></db:sql>
+			<db:input-parameters ><![CDATA[#[output application/java
+---
+{
+	name: vars.student.name,
+	surname: vars.student.surname,
+	numberOfIndex: vars.student.numberOfIndex,
+	adress: vars.student.adress,
+	city: vars.student.city,
+	contact: vars.student.contact,
+	studyProgram: vars.student.studyProgram.ID,
+	active: vars.student.active
+}]]]></db:input-parameters>
+		</db:insert>
+	</flow>
+	<flow name="deleteExam" doc:id="e9f6291c-e217-479e-afbe-0ebca5e8bcff">
+        <set-variable value="#[message.attributes.uriParams.ID]" doc:name="Set URI params" doc:id="1c30fee3-952b-4784-92a4-e54664ffb27a" variableName="id"/>
+		<db:select doc:name="Check if exam exists" doc:id="35ae580b-02d2-4e57-9431-9b62a2303d9a" config-ref="Database_Config">
+			<db:sql ><![CDATA[select * from exam
+where id = :ID]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{'ID' : vars.id}]]]></db:input-parameters>
+		</db:select>
+		<validation:is-not-empty-collection doc:name="Is not empty collection" doc:id="4457d1a5-49c8-49f3-91a5-7b70e34410a3" />
+		<db:delete doc:name="Delete" doc:id="90c4bf99-81e5-4908-a952-1dbfc98cdfa6" config-ref="Database_Config">
+            <db:sql><![CDATA[delete from exam where id = :ID]]></db:sql>
+            <db:input-parameters><![CDATA[#[{'ID' : attributes.uriParams.ID}]]]></db:input-parameters>
+        </db:delete>
+		<error-handler ref="NotFound" />
+    </flow>
+	<flow name="deletePaymentSlip" doc:id="ebe2ee3b-2d5a-4ea1-a419-eaa093d413ea">
+        <set-variable value="#[message.attributes.uriParams.ID]" doc:name="set URI params" doc:id="c832bba4-7bdd-450f-b407-d2e0869cbf29" variableName="id" />
+		<db:select doc:name="Check if payment slip exists" doc:id="503f31be-6a83-4404-bd14-f117e3a6b49a" config-ref="Database_Config">
+			<db:sql><![CDATA[select * from paymentSlip
+where id = :ID]]></db:sql>
+			<db:input-parameters><![CDATA[#[{'ID' : vars.id}]]]></db:input-parameters>
+		</db:select>
+		<validation:is-not-empty-collection doc:name="Is not empty collection" doc:id="6aa08ad5-81ed-44eb-94d5-f59b9947509d" />
+		<db:delete doc:name="Delete" doc:id="6859c29a-44bd-4e20-9913-cf979e923df1" config-ref="Database_Config">
+            <db:sql><![CDATA[delete from paymentSlip
+where ID = :ID]]></db:sql>
+            <db:input-parameters><![CDATA[#[{'ID' : attributes.uriParams.ID}]]]></db:input-parameters>
+        </db:delete>
+		<error-handler ref="NotFound" />
+    </flow>
+    <flow name="deleteStudent" doc:id="a79bd911-f7ad-4487-a21a-0847707f0cc3">
+        <set-variable value="#[message.attributes.uriParams.ID]" doc:name="set URI params" doc:id="bbf0d87b-3b23-43cb-a9d7-c8e71dc64ee6" variableName="id" />
+		<db:select doc:name="Check if student exists" doc:id="4cc875b5-4286-4884-8860-ddc1e68e5f45" config-ref="Database_Config">
+			<db:sql><![CDATA[select * from student
+where id = :ID]]></db:sql>
+			<db:input-parameters><![CDATA[#[{'ID' : vars.id}]]]></db:input-parameters>
+		</db:select>
+		<validation:is-not-empty-collection doc:name="Is not empty collection" doc:id="068a102c-8126-461c-8430-97ebb89028a6" />
+		<db:delete doc:name="Delete" doc:id="5fb48b1d-a7eb-4852-bf86-a8c94681c7ef" config-ref="Database_Config">
+            <db:sql><![CDATA[delete from student 
+where id = :ID]]></db:sql>
+            <db:input-parameters><![CDATA[#[{'ID' : attributes.uriParams.ID}]]]></db:input-parameters>
+        </db:delete>
+		<error-handler ref="NotFound" />
+    </flow>
+	<flow name="deleteClassroom" doc:id="204e752d-3352-4a54-b5e5-dfc1c4bb422f">
+        <set-variable value="#[message.attributes.uriParams.ID]" doc:name="Copy_of_set URI params" doc:id="8281fe9c-689c-4c77-bb3d-1a8166e3a660" variableName="id" />
+		<db:select doc:name="Check if classroom exists" doc:id="5cc3908c-2120-4745-93c6-9280b112c88b" config-ref="Database_Config">
+			<db:sql><![CDATA[select * from classroom
+where id = :ID]]></db:sql>
+			<db:input-parameters><![CDATA[#[{'ID' : vars.id}]]]></db:input-parameters>
+		</db:select>
+		<validation:is-not-empty-collection doc:name="Is not empty collection" doc:id="7a923034-c779-4c11-bf07-d3af7e45ea15" />
+		<db:delete doc:name="Delete" doc:id="3800b19d-24cd-4c98-83aa-17b535b435d7" config-ref="Database_Config">
+            <db:sql><![CDATA[delete from classroom 
+where id = :ID]]></db:sql>
+            <db:input-parameters><![CDATA[#[{'ID' : attributes.uriParams.ID}]]]></db:input-parameters>
+        </db:delete>
+		<error-handler ref="NotFound" />
+    </flow>
+    <flow name="deleteSubject" doc:id="3413b2ad-8205-4325-8f56-e32a42db70f8">
+        <set-variable value="#[message.attributes.uriParams.ID]" doc:name="set URI params" doc:id="3fa8efa0-3893-4e6d-b9af-66f95ec0a24c" variableName="id" />
+		<db:select doc:name="Check if subject exists" doc:id="227d5d47-341a-40f0-a159-27679163458b" config-ref="Database_Config">
+			<db:sql><![CDATA[select * from subject
+where id = :ID]]></db:sql>
+			<db:input-parameters><![CDATA[#[{'ID' : vars.id}]]]></db:input-parameters>
+		</db:select>
+		<validation:is-not-empty-collection doc:name="Is not empty collection" doc:id="b0c37502-d8c1-46d1-b70d-18b078d92b56" />
+		<db:delete doc:name="Delete" doc:id="bfe0f769-1778-4ac6-a068-8034d7854674" config-ref="Database_Config">
+            <db:sql><![CDATA[delete from subject
+where id = :ID]]></db:sql>
+            <db:input-parameters><![CDATA[#[{'ID' : attributes.uriParams.ID}]]]></db:input-parameters>
+        </db:delete>
+		<error-handler ref="NotFound" />
+    </flow>
+	<flow name="deleteEmployee" doc:id="c6c439ca-ea86-48e4-b9d0-6dea769c7ff1">
+        <set-variable value="#[message.attributes.uriParams.ID]" doc:name="set URI params" doc:id="99017d72-1fb4-4c25-8f30-1a239634ad81" variableName="id" />
+		<db:select doc:name="Check if employee exists" doc:id="a72d5670-dac7-429b-8a7a-5cfeadf69624" config-ref="Database_Config">
+			<db:sql><![CDATA[select * from employee
+where id = :ID]]></db:sql>
+			<db:input-parameters><![CDATA[#[{'ID' : vars.id}]]]></db:input-parameters>
+		</db:select>
+		<validation:is-not-empty-collection doc:name="Is not empty collection" doc:id="23c95408-cb8b-4cd8-b17e-5666f219fe10" />
+		<db:delete doc:name="Delete" doc:id="f918b8bf-682f-43b6-a800-d5468d58dfcd" config-ref="Database_Config">
+            <db:sql><![CDATA[delete from employee
+where id = :ID]]></db:sql>
+            <db:input-parameters><![CDATA[#[{'ID' : attributes.uriParams.ID}]]]></db:input-parameters>
+        </db:delete>
+		<error-handler ref="NotFound" />
+    </flow>
+	<flow name="deleteStudyProgram" doc:id="3d62b11c-302b-47ef-be68-73c8df7ba96d">
+        <set-variable value="#[message.attributes.uriParams.ID]" doc:name="set URI params" doc:id="bdc2a233-3063-4958-8886-409c20905f85" variableName="id" />
+		<db:select doc:name="Check if study program exists" doc:id="1a4dc328-0f54-4526-b697-dff26615defb" config-ref="Database_Config">
+			<db:sql><![CDATA[select * from studyProgram
+where id = :ID]]></db:sql>
+			<db:input-parameters><![CDATA[#[{'ID' : vars.id}]]]></db:input-parameters>
+		</db:select>
+		<validation:is-not-empty-collection doc:name="Is not empty collection" doc:id="f5f57598-64a4-46a2-bd23-76cddfbe634e" />
+		<db:delete doc:name="Delete" doc:id="ce71031f-57b4-4cf9-9b80-a38b01c8ca5e" config-ref="Database_Config">
+            <db:sql><![CDATA[delete from studyProgram
+where id = :ID]]></db:sql>
+            <db:input-parameters><![CDATA[#[{'ID' : attributes.uriParams.ID}]]]></db:input-parameters>
+        </db:delete>
+		<error-handler ref="NotFound" />
+    </flow>
+    <flow name="updateStudent" doc:id="a52a74c1-41b1-47b9-bc8f-df30757a0a54">
+		<set-variable value="#[message.payload]" doc:name="Set student" doc:id="1533a9c6-c115-4ac7-8359-53e8a3f6c367" variableName="student"/>
+		<set-variable value="#[message.attributes.uriParams.ID]" doc:name="Set student id" doc:id="951db5e8-0900-4eeb-828e-108696d46e38" variableName="id"/>
+		<db:select doc:name="Check if student exists in database" doc:id="b7aa683d-9d2a-45c7-b805-d07b114fb618" config-ref="Database_Config">
+			<db:sql ><![CDATA[select * from student
+where ID = :ID ]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{'ID' : vars.id}]]]></db:input-parameters>
+		</db:select>
+		<set-variable value="#[payload.id]" doc:name="Set ID" doc:id="c839e289-3af3-4137-9831-a5f289100c22" variableName="flag"/>
+		<choice doc:name="Check if ID exists" doc:id="30863aab-f819-4728-a6d2-e656d165315b" >
+			<when expression="#[vars.flag != null]">
+				<db:update doc:name="Update student" doc:id="bd828046-6e36-430f-b301-7ba7ff60d8b9" config-ref="Database_Config">
+            <db:sql><![CDATA[update student set 
+name = :name, 
+surname = :surname, 
+numberOfIndex = :numberOfIndex ,
+adress = :adress, 
+city = :city, 
+contact = :contact, 
+studyProgram = :studyProgram,
+active = :active
+where id = :ID]]></db:sql>
+            <db:input-parameters><![CDATA[#[{
+	"name": vars.student.name,
+	"surname": vars.student.surname,
+	"numberOfIndex": vars.student.numberOfIndex,
+	"adress": vars.student.adress,
+	"city": vars.student.city,
+	"contact": vars.student.contact,
+	"studyProgram": vars.student.studyProgram.ID,
+	"active": vars.student.active,
+	"ID": vars.id
+}]]]></db:input-parameters>
+        </db:update>
+			</when>
+			<otherwise>
+				<db:insert doc:name="Insert student" doc:id="5511e3df-995f-40ef-bf42-dfbca8d0dd8a" config-ref="Database_Config">
+            <db:sql><![CDATA[INSERT INTO student (name, surname, numberOfIndex, adress, city, contact,
+studyProgram, active) VALUES (:name, :surname, :numberOfIndex, :adress, :city, :contact, 
+:studyProgram, :active)]]></db:sql>
+            <db:input-parameters><![CDATA[#[output application/java
+---
+{
+	name: vars.student.name,
+	surname: vars.student.surname,
+	numberOfIndex: vars.student.numberOfIndex,
+	adress: vars.student.adress,
+	city: vars.student.city,
+	contact: vars.student.contact,
+	studyProgram: vars.student.studyProgram.ID,
+	active: vars.student.active
+}]]]></db:input-parameters>
+        </db:insert>
+			</otherwise>
+		</choice>
+    </flow>
+    <flow name="updateClassroom" doc:id="1da32d46-00b1-4228-908a-444b7c9b337c">
+        <db:update doc:name="Update classroom" doc:id="d2bd60a4-d278-477b-ba74-c01fda262d13" config-ref="Database_Config">
+            <db:sql><![CDATA[update classroom
+set numberOfClassroom = :numberOfClassroom
+where id = :ID]]></db:sql>
+            <db:input-parameters><![CDATA[#[{	"numberOfClassroom" : payload.numberOfClassroom,
+	"ID" : attributes.uriParams.ID
+}]]]></db:input-parameters>
+        </db:update>
+    </flow>
+    <flow name="updateSubject" doc:id="7adf7930-be57-429e-8aa2-bc82bb044005">
+        <db:update doc:name="Update subject" doc:id="6e44fc1b-b78b-434c-948e-44cecd013e1c" config-ref="Database_Config">
+            <db:sql><![CDATA[update subject 
+set name = :name, professor= :professor, espb=:espb
+where ID = :ID]]></db:sql>
+            <db:input-parameters><![CDATA[#[{	"name": payload.name,
+	"professor" : payload.professor,
+	"espb" : payload.espb,
+	"ID": attributes.uriParams.ID
+	
+}]]]></db:input-parameters>
+        </db:update>
+    </flow>
+    <flow name="updateEmployee" doc:id="e2542bc8-e78b-4e75-adaa-82ff4ea2b104">
+        <db:update doc:name="Update employee" doc:id="e9afb3f2-aa07-42ac-8976-88959067051f" config-ref="Database_Config">
+            <db:sql><![CDATA[update employee
+set name = :name, surname = :surname, counter = :counter, gender = :gender
+where ID = :ID]]></db:sql>
+            <db:input-parameters><![CDATA[#[{
+	"name" : payload.name,
+	"surname" : payload.surname,
+	"counter" : payload.counter,
+	"gender" : payload.gender,
+	"ID" : attributes.uriParams.ID
+}]]]></db:input-parameters>
+        </db:update>
+    </flow>
+    <flow name="updateStudyProgram" doc:id="ef92305f-563d-4245-9f7f-9c38d6dcfb4c">
+		<db:update doc:name="Update study program" doc:id="c43c3d07-efec-4952-87c4-c60fcea72c4c" config-ref="Database_Config">
+            <db:sql><![CDATA[update studyProgram
+set name= :name, duration= :duration
+where id = :ID]]></db:sql>
+            <db:input-parameters><![CDATA[#[{	"name" : payload.name,
+	"duration" : payload.duration,
+	"ID" : attributes.uriParams.ID
+}]]]></db:input-parameters>
+        </db:update>
+    </flow>
+    <flow name="updateExam" doc:id="9478d225-1faa-4bb6-9433-7b86d12997c3">
+        <db:update doc:name="Update exam" doc:id="ebc3ab7a-e328-4da7-b262-0266f6425310" config-ref="Database_Config">
+            <db:sql><![CDATA[update exam 
+set date = :date, time= :time, student= :student, employee= :employee, subject= :subject,
+classroom= :classroom
+where ID = :ID]]></db:sql>
+            <db:input-parameters><![CDATA[#[{	"date" : payload.date,
+	"time" : payload.time,
+	"student" : payload.student.ID,
+	"employee" : payload.employee.ID,
+	"subject": payload.subject.ID,
+	"classroom": payload.classroom.ID,
+	"ID": attributes.uriParams.ID
+	
+}]]]></db:input-parameters>
+        </db:update>
+    </flow>
+    <flow name="updatePaymentSlip" doc:id="fcd1abed-dd83-4c96-bf5f-715ed8bd31b4">
+        <db:update doc:name="Update payment slip" doc:id="3b759e10-ce3c-44bf-8641-937fc37e031f" config-ref="Database_Config">
+            <db:sql><![CDATA[update paymentSlip 
+set bankAccountNumber= :bankAccountNumber, sum= :sum, student = :student, employee= :employee
+where id = :ID]]></db:sql>
+            <db:input-parameters><![CDATA[#[{
+	"bankAccountNumber": payload.bankAccountNumber,
+	"sum": payload.sum,
+	"student": payload.student.ID,
+	"employee": payload.employee.ID,
+	"ID" : attributes.uriParams.ID
+}]]]></db:input-parameters>
+        </db:update>
+    </flow>
+</mule>

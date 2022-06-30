@@ -1,0 +1,341 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$ref": "#/definitions/schema",
+  "definitions": {
+    "schema": {
+      "items": {
+        "$ref": "#/definitions/exam"
+      },
+      "type": "array",
+      "x-amf-examples": {
+        "output": [
+          {
+            "ID": 1,
+            "date": "22-02-2022",
+            "time": "12:45",
+            "student": {
+              "ID": 5,
+              "name": "Ivana",
+              "surname": "Ivanovic",
+              "numberOfIndex": "IT-44 2020",
+              "adress": "Gogojeva 12",
+              "city": "Novi Sad",
+              "contact": "065/6477777",
+              "studyProgram": {
+                "ID": 2,
+                "name": "Mehatronika",
+                "duration": 4
+              },
+              "active": false
+            },
+            "employee": {
+              "ID": 3,
+              "name": "Ivana",
+              "surname": "Simic",
+              "counter": 7
+            },
+            "subject": {
+              "ID?": 8,
+              "name": "Matematika",
+              "professor": "Srdjan Stojic",
+              "espb": 5
+            },
+            "classroom": {
+              "ID": 6,
+              "numberOfClassroom": "AH409"
+            }
+          },
+          {
+            "ID": 1,
+            "date": "22-03-2022",
+            "time": "14:45",
+            "student": {
+              "ID": 5,
+              "name": "Ivana",
+              "surname": "Ivanovic",
+              "numberOfIndex": "IT-44 2020",
+              "adress": "Gogojeva 12",
+              "city": "Novi Sad",
+              "contact": "065/6477777",
+              "studyProgram": {
+                "ID": 2,
+                "name": "Mehatronika",
+                "duration": 4
+              },
+              "active": false
+            },
+            "employee": {
+              "ID": 3,
+              "name": "Ivana",
+              "surname": "Simic",
+              "counter": 7
+            },
+            "subject": {
+              "ID?": 8,
+              "name": "Matematika",
+              "professor": "Srdjan Stojic",
+              "espb": 5
+            },
+            "classroom": {
+              "ID": 6,
+              "numberOfClassroom": "AH409"
+            }
+          }
+        ]
+      }
+    },
+    "exam": {
+      "type": "object",
+      "x-amf-examples": {
+        "input": {
+          "date": "21-02-2022",
+          "time": "12:45",
+          "student": {
+            "ID": 5,
+            "name": "Ivana",
+            "surname": "Ivanovic",
+            "numberOfIndex": "IT-44 2020",
+            "adress": "Gogojeva 12",
+            "city": "Novi Sad",
+            "contact": "065/6477777",
+            "studyProgram": {
+              "ID": 2,
+              "name": "Mehatronika",
+              "duration": 4
+            },
+            "active": false
+          },
+          "employee": {
+            "ID": 3,
+            "name": "Ivana",
+            "surname": "Simic",
+            "counter": 7
+          },
+          "subject": {
+            "ID?": 8,
+            "name": "Matematika",
+            "professor": "Srdjan Stojic",
+            "espb": 5
+          },
+          "classroom": {
+            "ID": 6,
+            "numberOfClassroom": "AH409"
+          }
+        },
+        "output": {
+          "ID": 1,
+          "date": "22-02-2022",
+          "time": "12:45",
+          "student": {
+            "ID": 5,
+            "name": "Ivana",
+            "surname": "Ivanovic",
+            "numberOfIndex": "IT-44 2020",
+            "adress": "Gogojeva 12",
+            "city": "Novi Sad",
+            "contact": "065/6477777",
+            "studyProgram": {
+              "ID": 2,
+              "name": "Mehatronika",
+              "duration": 4
+            },
+            "active": false
+          },
+          "employee": {
+            "ID": 3,
+            "name": "Ivana",
+            "surname": "Simic",
+            "counter": 7
+          },
+          "subject": {
+            "ID?": 8,
+            "name": "Matematika",
+            "professor": "Srdjan Stojic",
+            "espb": 5
+          },
+          "classroom": {
+            "ID": 6,
+            "numberOfClassroom": "AH409"
+          }
+        },
+        "example_0": {
+          "ID": 1,
+          "date": "22-02-2022",
+          "time": "16:45",
+          "student": {
+            "ID": 5,
+            "name": "Ivana",
+            "surname": "Ivanovic",
+            "numberOfIndex": "IT-44 2020",
+            "adress": "Gogojeva 12",
+            "city": "Novi Sad",
+            "contact": "065/6477777",
+            "studyProgram": {
+              "ID": 2,
+              "name": "Mehatronika",
+              "duration": 4
+            },
+            "active": false
+          },
+          "employee": {
+            "ID": 3,
+            "name": "Ivana",
+            "surname": "Simic",
+            "counter": 7
+          },
+          "subject": {
+            "ID?": 8,
+            "name": "Matematika",
+            "professor": "Srdjan Stojic",
+            "espb": 5
+          },
+          "classroom": {
+            "ID": 6,
+            "numberOfClassroom": "AH409"
+          }
+        }
+      },
+      "additionalProperties": true,
+      "required": [
+        "date",
+        "time",
+        "student",
+        "employee",
+        "subject",
+        "classroom"
+      ],
+      "properties": {
+        "ID": {
+          "type": "integer"
+        },
+        "date": {
+          "type": "string"
+        },
+        "time": {
+          "type": "string"
+        },
+        "student": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "name",
+            "surname",
+            "numberOfIndex",
+            "adress",
+            "city",
+            "contact",
+            "studyProgram",
+            "active"
+          ],
+          "properties": {
+            "ID": {
+              "type": "integer"
+            },
+            "name": {
+              "type": "string"
+            },
+            "surname": {
+              "type": "string"
+            },
+            "numberOfIndex": {
+              "type": "string"
+            },
+            "adress": {
+              "type": "string"
+            },
+            "city": {
+              "type": "string"
+            },
+            "contact": {
+              "type": "string"
+            },
+            "studyProgram": {
+              "type": "object",
+              "additionalProperties": true,
+              "required": [
+                "ID",
+                "name",
+                "duration"
+              ],
+              "properties": {
+                "ID": {
+                  "type": "integer"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "duration": {
+                  "type": "integer"
+                }
+              }
+            },
+            "active": {
+              "type": "boolean"
+            }
+          }
+        },
+        "employee": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "name",
+            "surname",
+            "counter"
+          ],
+          "properties": {
+            "ID": {
+              "type": "integer"
+            },
+            "name": {
+              "type": "string"
+            },
+            "surname": {
+              "type": "string"
+            },
+            "counter": {
+              "type": "integer"
+            }
+          }
+        },
+        "subject": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "name",
+            "professor",
+            "espb"
+          ],
+          "properties": {
+            "ID": {
+              "type": "integer"
+            },
+            "name": {
+              "type": "string"
+            },
+            "professor": {
+              "type": "string"
+            },
+            "espb": {
+              "type": "integer"
+            }
+          }
+        },
+        "classroom": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "numberOfClassroom"
+          ],
+          "properties": {
+            "ID": {
+              "type": "integer"
+            },
+            "numberOfClassroom": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

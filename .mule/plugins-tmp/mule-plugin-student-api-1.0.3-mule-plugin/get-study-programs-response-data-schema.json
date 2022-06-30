@@ -1,0 +1,61 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$ref": "#/definitions/schema",
+  "definitions": {
+    "schema": {
+      "items": {
+        "$ref": "#/definitions/studyProgram"
+      },
+      "type": "array",
+      "x-amf-examples": {
+        "output": [
+          {
+            "ID": 1,
+            "name": "IIS",
+            "duration": 4
+          },
+          {
+            "ID": 2,
+            "name": "IN",
+            "duration": 4
+          }
+        ]
+      }
+    },
+    "studyProgram": {
+      "type": "object",
+      "x-amf-examples": {
+        "input": {
+          "name": "SIT",
+          "duration": 4
+        },
+        "output": {
+          "ID": 7,
+          "name": "IT",
+          "duration": 4
+        },
+        "example_0": {
+          "ID": 7,
+          "name": "AI",
+          "duration": 4
+        }
+      },
+      "additionalProperties": true,
+      "required": [
+        "name",
+        "duration"
+      ],
+      "properties": {
+        "ID": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        },
+        "duration": {
+          "type": "integer"
+        }
+      }
+    }
+  }
+}

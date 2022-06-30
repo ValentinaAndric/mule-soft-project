@@ -1,0 +1,45 @@
+%dw 2.0
+
+type auto_ca6be247_245f_4ea6_bf6f_28bd28d32614_Input_Payload = {
+  date: String, 
+  student: {
+    numberOfIndex: String, 
+    city: String, 
+    surname: String, 
+    contact: String, 
+    name: String, 
+    active: Boolean, 
+    adress: String, 
+    ID?: Number, 
+    studyProgram: {
+      duration: Number, 
+      name: String, 
+      ID: Number, 
+      _?: Any
+    }, 
+    _?: Any
+  }, 
+  subject: {
+    professor: String, 
+    name: String, 
+    ID?: Number, 
+    espb: Number, 
+    _?: Any
+  }, 
+  classroom: {
+    numberOfClassroom: String, 
+    ID?: Number, 
+    _?: Any
+  }, 
+  ID?: Number, 
+  time: String, 
+  employee: {
+    surname: String, 
+    name: String, 
+    ID?: Number, 
+    counter: Number, 
+    _?: Any
+  }, 
+  _?: Any
+}
+

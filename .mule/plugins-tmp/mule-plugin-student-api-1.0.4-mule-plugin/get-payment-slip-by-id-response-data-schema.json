@@ -1,0 +1,181 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$ref": "#/definitions/paymentSlip",
+  "definitions": {
+    "paymentSlip": {
+      "type": "object",
+      "x-amf-examples": {
+        "input": {
+          "bankAccountNumber": "55-5634253-637",
+          "student": {
+            "ID": 5,
+            "name": "Ivana",
+            "surname": "Ivanovic",
+            "numberOfIndex": "IT-44 2020",
+            "adress": "Gogojeva 12",
+            "city": "Novi Sad",
+            "contact": "065/6477777",
+            "studyProgram": {
+              "ID": 2,
+              "name": "Mehatronika",
+              "duration": 4
+            },
+            "active": false
+          },
+          "employee": {
+            "ID": 3,
+            "name": "Ivana",
+            "surname": "Simic",
+            "counter": 7
+          }
+        },
+        "output": {
+          "ID": 4,
+          "bankAccountNumber": "55-5634253-637",
+          "student": {
+            "ID": 5,
+            "name": "Ivana",
+            "surname": "Ivanovic",
+            "numberOfIndex": "IT-44 2020",
+            "adress": "Gogojeva 12",
+            "city": "Novi Sad",
+            "contact": "065/6477777",
+            "studyProgram": {
+              "ID": 2,
+              "name": "Mehatronika",
+              "duration": 4
+            },
+            "active": false
+          },
+          "employee": {
+            "ID": 3,
+            "name": "Ivana",
+            "surname": "Simic",
+            "counter": 7
+          }
+        },
+        "example_0": {
+          "ID": 1,
+          "bankAccountNumber": "55-5634253-637",
+          "student": {
+            "ID": 5,
+            "name": "Ivana",
+            "surname": "Ivanovic",
+            "numberOfIndex": "IT-44 2020",
+            "adress": "Gogojeva 12",
+            "city": "Novi Sad",
+            "contact": "065/6477777",
+            "studyProgram": {
+              "ID": 2,
+              "name": "Mehatronika",
+              "duration": 4
+            },
+            "active": false
+          },
+          "employee": {
+            "ID": 3,
+            "name": "Ivana",
+            "surname": "Simic",
+            "counter": 7
+          }
+        }
+      },
+      "additionalProperties": true,
+      "required": [
+        "bankAccountNumber",
+        "student",
+        "employee"
+      ],
+      "properties": {
+        "ID": {
+          "type": "integer"
+        },
+        "bankAccountNumber": {
+          "type": "string"
+        },
+        "student": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "name",
+            "surname",
+            "numberOfIndex",
+            "adress",
+            "city",
+            "contact",
+            "studyProgram",
+            "active"
+          ],
+          "properties": {
+            "ID": {
+              "type": "integer"
+            },
+            "name": {
+              "type": "string"
+            },
+            "surname": {
+              "type": "string"
+            },
+            "numberOfIndex": {
+              "type": "string"
+            },
+            "adress": {
+              "type": "string"
+            },
+            "city": {
+              "type": "string"
+            },
+            "contact": {
+              "type": "string"
+            },
+            "studyProgram": {
+              "type": "object",
+              "additionalProperties": true,
+              "required": [
+                "name",
+                "duration"
+              ],
+              "properties": {
+                "ID": {
+                  "type": "integer"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "duration": {
+                  "type": "integer"
+                }
+              }
+            },
+            "active": {
+              "type": "boolean"
+            }
+          }
+        },
+        "employee": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "name",
+            "surname",
+            "counter"
+          ],
+          "properties": {
+            "ID": {
+              "type": "integer"
+            },
+            "name": {
+              "type": "string"
+            },
+            "surname": {
+              "type": "string"
+            },
+            "counter": {
+              "type": "integer"
+            }
+          }
+        }
+      }
+    }
+  }
+}

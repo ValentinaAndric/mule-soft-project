@@ -1,0 +1,12 @@
+<PaymentSlip>
+<id>1</id>
+<bankAccountNumber>"3434343"</bankAccountNumber>
+<sum>300</sum>
+<student>
+<id>1</id>
+</student>
+<employee>
+<id>1</id>
+</employee>
+
+</PaymentSlip>

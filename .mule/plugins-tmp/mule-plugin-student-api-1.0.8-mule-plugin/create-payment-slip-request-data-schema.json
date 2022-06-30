@@ -1,0 +1,78 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$ref": "#/definitions/paymentSlip",
+  "definitions": {
+    "paymentSlip": {
+      "type": "object",
+      "x-amf-examples": {
+        "input": {
+          "bankAccountNumber": "55-5634253-637",
+          "student": {
+            "ID": 5
+          },
+          "employee": {
+            "ID": 5
+          }
+        },
+        "output": {
+          "ID": 4,
+          "bankAccountNumber": "55-5634253-637",
+          "student": {
+            "ID": 5
+          },
+          "employee": {
+            "ID": 3
+          }
+        },
+        "example_0": {
+          "ID": 1,
+          "bankAccountNumber": "55-5634253-637",
+          "student": {
+            "ID": 5
+          },
+          "employee": {
+            "ID": 3
+          }
+        }
+      },
+      "additionalProperties": true,
+      "required": [
+        "bankAccountNumber",
+        "student",
+        "employee"
+      ],
+      "properties": {
+        "ID": {
+          "type": "integer"
+        },
+        "bankAccountNumber": {
+          "type": "string"
+        },
+        "student": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "ID"
+          ],
+          "properties": {
+            "ID": {
+              "type": "integer"
+            }
+          }
+        },
+        "employee": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "ID"
+          ],
+          "properties": {
+            "ID": {
+              "type": "integer"
+            }
+          }
+        }
+      }
+    }
+  }
+}

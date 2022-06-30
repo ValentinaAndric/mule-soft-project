@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:tracing="http://www.mulesoft.org/schema/mule/tracing" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:studentapi="http://www.mulesoft.org/schema/mule/studentapi"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/studentapi http://www.mulesoft.org/schema/mule/studentapi/current/mule-studentapi.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/tracing http://www.mulesoft.org/schema/mule/tracing/current/mule-tracing.xsd">
+	<db:config name="connection" doc:name="Database Config" doc:id="e95274d9-1ac4-4bb9-b1dc-57999e664b69" >
+		<db:generic-connection url="jdbc:postgresql://localhost:5432/studentska_sluzba" driverClassName="org.postgresql.Driver" user="postgres" password="postgres" />
+	</db:config>
+	<studentapi:config name="STUDENT_API_Config" doc:name="STUDENT API Config" doc:id="8c6d7a9c-e529-4088-821c-d5fe95fa2ce1" property_host="${student.host}" property_port="${student.port}" property_protocol="${student.protocol}" property_basePath="${student.basePath}" />
+	<http:listener-config name="HTTP_Listener_config2" doc:name="HTTP Listener config" doc:id="b7525779-85e2-4077-97ad-319461651bf2" basePath="http://localhost:8081" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="muleprojectFlow" doc:id="4f7d5c19-3d01-4a0d-8058-bc709391585b" >
+		<http:listener doc:name="Listener" doc:id="a54f75b9-a3ea-45b0-8bf8-54b907246f4d" config-ref="HTTP_Listener_config2" path="/students"/>
+		<set-payload value="Student info" doc:name="Set Payload" doc:id="b36d83c1-d39f-4b2a-af44-0a2524aee25d" />
+	</flow>
+</mule>

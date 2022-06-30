@@ -1,0 +1,13 @@
+[
+  {
+    "ID": 1,
+    "name": "Valentina",
+    "surname": "Andric",
+    "numberOfIndex": "IT39-2019",
+    "adress": "Danila Kisa, 36",
+    "city": "Novi Sad",
+    "contact": "065748394",
+    "studyProgram": 1,
+    "active": false
+  }
+]

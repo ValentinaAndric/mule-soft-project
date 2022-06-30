@@ -1,0 +1,30 @@
+[
+  {
+    "ID": 5,
+    "name": "Ivana",
+    "surname": "Ivanovic",
+    "numberOfIndex": "IT-44 2020",
+    "adress": "Gogojeva 12",
+    "city": "Novi Sad",
+    "contact": "065/6477777",
+    "studyProgram": {
+      "name": "Mehatronika",
+      "duration": 4
+    },
+    "active": false
+  },
+  {
+    "ID": 5,
+    "name": "Sara",
+    "surname": "Saric",
+    "numberOfIndex": "IT-44 2020",
+    "adress": "Gogojeva 18",
+    "city": "Zrenjanin",
+    "contact": "065/6477777",
+    "studyProgram": {
+      "name": "Mehatronika",
+      "duration": 4
+    },
+    "active": false
+  }
+]

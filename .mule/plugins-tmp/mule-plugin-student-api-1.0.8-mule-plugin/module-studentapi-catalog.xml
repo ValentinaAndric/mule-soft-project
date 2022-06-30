@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<catalogs xmlns="http://www.mulesoft.org/schema/mule/types" >
+
+            
+            <catalog name="get-students-response-type" format="application/json">
+        <schema format="application/json+schema" location="./get-students-response-data-schema.json" />
+    </catalog>
+        
+                        <catalog name="create-student-request-type" format="application/json">
+        <schema format="application/json+schema" location="./create-student-request-data-schema.json" />
+    </catalog>
+        
+        
+                    
+            <catalog name="get-student-by-id-response-type" format="application/json">
+        <schema format="application/json+schema" location="./get-student-by-id-response-data-schema.json" />
+    </catalog>
+        
+                        <catalog name="update-student-by-id-request-type" format="application/json">
+        <schema format="application/json+schema" location="./update-student-by-id-request-data-schema.json" />
+    </catalog>
+        
+        
+                    
+        
+                    
+            <catalog name="get-classrooms-response-type" format="application/json">
+        <schema format="application/json+schema" location="./get-classrooms-response-data-schema.json" />
+    </catalog>
+        
+                        <catalog name="create-classroom-request-type" format="application/json">
+        <schema format="application/json+schema" location="./create-classroom-request-data-schema.json" />
+    </catalog>
+        
+        
+                    
+            <catalog name="get-classroom-by-id-response-type" format="application/json">
+        <schema format="application/json+schema" location="./get-classroom-by-id-response-data-schema.json" />
+    </catalog>
+        
+                        <catalog name="update-classroom-by-id-request-type" format="application/json">
+        <schema format="application/json+schema" location="./update-classroom-by-id-request-data-schema.json" />
+    </catalog>
+        
+        
+                    
+        
+                    
+            <catalog name="get-employees-response-type" format="application/json">
+        <schema format="application/json+schema" location="./get-employees-response-data-schema.json" />
+    </catalog>
+        
+                        <catalog name="create-employee-request-type" format="application/json">
+        <schema format="application/json+schema" location="./create-employee-request-data-schema.json" />
+    </catalog>
+        
+        
+                    
+            <catalog name="get-employee-by-id-response-type" format="application/json">
+        <schema format="application/json+schema" location="./get-employee-by-id-response-data-schema.json" />
+    </catalog>
+        
+                        <catalog name="update-employee-by-id-request-type" format="application/json">
+        <schema format="application/json+schema" location="./update-employee-by-id-request-data-schema.json" />
+    </catalog>
+        
+        
+                    
+        
+                    
+            <catalog name="get-study-programs-response-type" format="application/json">
+        <schema format="application/json+schema" location="./get-study-programs-response-data-schema.json" />
+    </catalog>
+        
+                        <catalog name="create-study-program-request-type" format="application/json">
+        <schema format="application/json+schema" location="./create-study-program-request-data-schema.json" />
+    </catalog>
+        
+        
+                    
+            <catalog name="get-study-program-by-id-response-type" format="application/json">
+        <schema format="application/json+schema" location="./get-study-program-by-id-response-data-schema.json" />
+    </catalog>
+        
+                        <catalog name="update-study-program-by-id-request-type" format="application/json">
+        <schema format="application/json+schema" location="./update-study-program-by-id-request-data-schema.json" />
+    </catalog>
+        
+        
+                    
+        
+                    
+            <catalog name="get-subjects-response-type" format="application/json">
+        <schema format="application/json+schema" location="./get-subjects-response-data-schema.json" />
+    </catalog>
+        
+                        <catalog name="create-subject-request-type" format="application/json">
+        <schema format="application/json+schema" location="./create-subject-request-data-schema.json" />
+    </catalog>
+        
+        
+                    
+            <catalog name="get-subject-by-id-response-type" format="application/json">
+        <schema format="application/json+schema" location="./get-subject-by-id-response-data-schema.json" />
+    </catalog>
+        
+                        <catalog name="update-subject-by-id-request-type" format="application/json">
+        <schema format="application/json+schema" location="./update-subject-by-id-request-data-schema.json" />
+    </catalog>
+        
+        
+                    
+        
+                    
+            <catalog name="get-exams-response-type" format="application/json">
+        <schema format="application/json+schema" location="./get-exams-response-data-schema.json" />
+    </catalog>
+        
+                        <catalog name="create-exam-request-type" format="application/json">
+        <schema format="application/json+schema" location="./create-exam-request-data-schema.json" />
+    </catalog>
+        
+        
+                    
+            <catalog name="get-exam-by-id-response-type" format="application/json">
+        <schema format="application/json+schema" location="./get-exam-by-id-response-data-schema.json" />
+    </catalog>
+        
+                        <catalog name="update-exam-by-id-request-type" format="application/json">
+        <schema format="application/json+schema" location="./update-exam-by-id-request-data-schema.json" />
+    </catalog>
+        
+        
+                    
+        
+                    
+            <catalog name="get-payment-slips-response-type" format="application/json">
+        <schema format="application/json+schema" location="./get-payment-slips-response-data-schema.json" />
+    </catalog>
+        
+                        <catalog name="create-payment-slip-request-type" format="application/json">
+        <schema format="application/json+schema" location="./create-payment-slip-request-data-schema.json" />
+    </catalog>
+        
+        
+                    
+            <catalog name="get-payment-slip-by-id-response-type" format="application/json">
+        <schema format="application/json+schema" location="./get-payment-slip-by-id-response-data-schema.json" />
+    </catalog>
+        
+                        <catalog name="update-payment-slip-by-id-request-type" format="application/json">
+        <schema format="application/json+schema" location="./update-payment-slip-by-id-request-data-schema.json" />
+    </catalog>
+        
+        
+                    
+        
+            
+    
+    <catalog name="request-streaming-mode-enum" format="application/json">
+        <schema format="application/json+schema" location="./request-streaming-mode-enum.json" />
+    </catalog>
+
+    <catalog name="java" format="application/java">
+            <schema format="application/classloader"/>
+    </catalog>
+
+</catalogs>

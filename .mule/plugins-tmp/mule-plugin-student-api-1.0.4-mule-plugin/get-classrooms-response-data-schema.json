@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$ref": "#/definitions/schema",
+  "definitions": {
+    "schema": {
+      "items": {
+        "$ref": "#/definitions/classroom"
+      },
+      "type": "array",
+      "x-amf-examples": {
+        "output": [
+          {
+            "ID": 1,
+            "numberOfClassroom": "ITC-201"
+          },
+          {
+            "ID": 2,
+            "numberOfClassroom": "ITC-209"
+          }
+        ]
+      }
+    },
+    "classroom": {
+      "type": "object",
+      "x-amf-examples": {
+        "input": {
+          "numberOfClassroom": "AH203"
+        },
+        "output": {
+          "ID": 6,
+          "numberOfClassroom": "AH409"
+        },
+        "example_0": {
+          "ID": 1,
+          "numberOfClassroom": "AH1B"
+        }
+      },
+      "additionalProperties": true,
+      "required": [
+        "numberOfClassroom"
+      ],
+      "properties": {
+        "ID": {
+          "type": "integer"
+        },
+        "numberOfClassroom": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

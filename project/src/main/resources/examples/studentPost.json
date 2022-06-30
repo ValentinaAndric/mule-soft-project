@@ -1,0 +1,12 @@
+{
+  "name": "Ivana",
+  "surname": "Ivanovic",
+  "numberOfIndex": "IT-44 2020",
+  "adress": "Gogojeva 12",
+  "city": "Novi Sad",
+  "contact": "065/6477777",
+  "studyProgram": {
+    "ID": 1
+  },
+  "active": false
+}

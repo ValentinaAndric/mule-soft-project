@@ -1,0 +1,70 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$ref": "#/definitions/schema",
+  "definitions": {
+    "schema": {
+      "items": {
+        "$ref": "#/definitions/subject"
+      },
+      "type": "array",
+      "x-amf-examples": {
+        "output": [
+          {
+            "ID?": 6,
+            "name": "Matematika",
+            "professor": "Srdjan Stojic",
+            "espb": 5
+          },
+          {
+            "ID?": 5,
+            "name": "Uvod u programiranje",
+            "professor": "Srdjan Stojic",
+            "espb": 4
+          }
+        ]
+      }
+    },
+    "subject": {
+      "type": "object",
+      "x-amf-examples": {
+        "input": {
+          "name": "Matematika",
+          "professor": "Srdjan Stojic",
+          "espb": 5
+        },
+        "output": {
+          "ID?": 8,
+          "name": "Matematika",
+          "professor": "Srdjan Stojic",
+          "espb": 5
+        },
+        "example_0": {
+          "ID?": 6,
+          "name": "Baze podataka",
+          "professor": "Srdjan Stojic",
+          "espb": 5
+        }
+      },
+      "additionalProperties": true,
+      "required": [
+        "name",
+        "professor",
+        "espb"
+      ],
+      "properties": {
+        "ID": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        },
+        "professor": {
+          "type": "string"
+        },
+        "espb": {
+          "type": "integer"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,2101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module name="STUDENT API"
+        prefix="studentapi"
+        namespace="http://www.mulesoft.org/schema/mule/studentapi"
+        
+        xmlns="http://www.mulesoft.org/schema/mule/module"
+        xmlns:mule="http://www.mulesoft.org/schema/mule/core"
+        xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+        xmlns:http="http://www.mulesoft.org/schema/mule/http"
+        
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+           http://www.mulesoft.org/schema/mule/module http://www.mulesoft.org/schema/mule/module/current/mule-module.xsd
+           http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+           
+           http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+
+
+    <property name="property_host" displayName="host" type="string"  summary="Host for consuming API"/>
+    <property name="property_port" displayName="port" type="string"  summary="Port for consuming API"/>
+    <property name="property_basePath" displayName="basePath" type="string" defaultValue="/" summary="Basepath for consuming API"/>
+    <property name="property_protocol" displayName="protocol" type="string"  summary="Protocol for consuming API"/>
+
+        <property name="property_proxyConfig" displayName="Proxy Config Reference" type="string" use="OPTIONAL" summary="Proxy config reference" tab="Proxy"/>
+        <property name="property_responseTimeout" displayName="Response timeout" type="string" defaultValue="10000" summary="Maximum time in milliseconds that the request element will block the execution of the flow waiting for the HTTP response."/>
+
+    
+    
+
+    <http:request-config
+name="studentapi-httpreq-config" xmlns:connection="true"
+responseTimeout="#[vars.property_responseTimeout]"
+basePath="#[vars.property_basePath]">
+<http:request-connection
+host="#[vars.property_host]"
+protocol="#[vars.property_protocol]"
+port="#[vars.property_port]"
+proxyConfig="#[vars.property_proxyConfig]"
+>
+</http:request-connection>
+</http:request-config>
+
+
+
+
+    <operation name="get-students"  >
+        <parameters>
+                                        <parameter name="active"
+                                        type="boolean"
+                                        use="OPTIONAL"                    doc:description="header value"/>
+                                    <parameter name="request-streaming-mode" displayName="Request streaming mode" type="request-streaming-mode-enum" use="OPTIONAL" tab="Advanced" />
+        </parameters>
+        <body>
+                <http:request config-ref="studentapi-httpreq-config"
+              path="/students"
+              method="GET"
+              requestStreamingMode='#[vars["request-streaming-mode"]]'
+>
+                <mule:error-mapping sourceType="HTTP:PARSING" targetType="STUDENTAPI:PARSING" />
+            <mule:error-mapping sourceType="HTTP:TIMEOUT" targetType="STUDENTAPI:TIMEOUT" />
+            <mule:error-mapping sourceType="HTTP:SECURITY" targetType="STUDENTAPI:SECURITY" />
+            <mule:error-mapping sourceType="HTTP:CONNECTIVITY" targetType="STUDENTAPI:CONNECTIVITY" />
+            <mule:error-mapping sourceType="HTTP:BAD_REQUEST" targetType="STUDENTAPI:BAD_REQUEST" />
+            <mule:error-mapping sourceType="HTTP:UNAUTHORIZED" targetType="STUDENTAPI:UNAUTHORIZED" />
+            <mule:error-mapping sourceType="HTTP:FORBIDDEN" targetType="STUDENTAPI:FORBIDDEN" />
+            <mule:error-mapping sourceType="HTTP:METHOD_NOT_ALLOWED" targetType="STUDENTAPI:METHOD_NOT_ALLOWED" />
+            <mule:error-mapping sourceType="HTTP:NOT_FOUND" targetType="STUDENTAPI:NOT_FOUND" />
+            <mule:error-mapping sourceType="HTTP:NOT_ACCEPTABLE" targetType="STUDENTAPI:NOT_ACCEPTABLE" />
+            <mule:error-mapping sourceType="HTTP:UNSUPPORTED_MEDIA_TYPE" targetType="STUDENTAPI:UNSUPPORTED_MEDIA_TYPE" />
+            <mule:error-mapping sourceType="HTTP:TOO_MANY_REQUESTS" targetType="STUDENTAPI:TOO_MANY_REQUESTS" />
+            <mule:error-mapping sourceType="HTTP:INTERNAL_SERVER_ERROR" targetType="STUDENTAPI:INTERNAL_SERVER_ERROR" />
+            <mule:error-mapping sourceType="HTTP:SERVICE_UNAVAILABLE" targetType="STUDENTAPI:SERVICE_UNAVAILABLE" />
+            <mule:error-mapping sourceType="HTTP:RETRY_EXHAUSTED" targetType="STUDENTAPI:RETRY_EXHAUSTED" />
+        
+            <http:headers>
+            <![CDATA[#[ ( { 'Accept': 'application/json' } ++ { 'active': vars['active'] } ) filterObject $ != null ]]]>
+        </http:headers>
+            </http:request>
+    <mule:set-payload value="#[payload]" mimeType="application/json" />
+        </body>
+                    <output type="get-students-response-type" />
+                <output-attributes type="java::org.mule.extension.http.api.HttpResponseAttributes" />
+
+        <errors>
+                            <error type="PARSING"/>
+                            <error type="TIMEOUT"/>
+                            <error type="SECURITY"/>
+                            <error type="CONNECTIVITY"/>
+                            <error type="BAD_REQUEST"/>
+                            <error type="UNAUTHORIZED"/>
+                            <error type="FORBIDDEN"/>
+                            <error type="METHOD_NOT_ALLOWED"/>
+                            <error type="NOT_FOUND"/>
+                            <error type="NOT_ACCEPTABLE"/>
+                            <error type="UNSUPPORTED_MEDIA_TYPE"/>
+                            <error type="TOO_MANY_REQUESTS"/>
+                            <error type="INTERNAL_SERVER_ERROR"/>
+                            <error type="SERVICE_UNAVAILABLE"/>
+                            <error type="RETRY_EXHAUSTED"/>
+                    </errors>
+    </operation>
+    <operation name="create-student"  >
+        <parameters>
+                            <parameter name="create-student-request-data" type="create-student-request-type" use="REQUIRED" role="PRIMARY" />
+                                                <parameter name="request-streaming-mode" displayName="Request streaming mode" type="request-streaming-mode-enum" use="OPTIONAL" tab="Advanced" />
+        </parameters>
+        <body>
+                <http:request config-ref="studentapi-httpreq-config"
+              path="/students"
+              method="POST"
+              requestStreamingMode='#[vars["request-streaming-mode"]]'
+>
+                <mule:error-mapping sourceType="HTTP:PARSING" targetType="STUDENTAPI:PARSING" />
+            <mule:error-mapping sourceType="HTTP:TIMEOUT" targetType="STUDENTAPI:TIMEOUT" />
+            <mule:error-mapping sourceType="HTTP:SECURITY" targetType="STUDENTAPI:SECURITY" />
+            <mule:error-mapping sourceType="HTTP:CONNECTIVITY" targetType="STUDENTAPI:CONNECTIVITY" />
+            <mule:error-mapping sourceType="HTTP:BAD_REQUEST" targetType="STUDENTAPI:BAD_REQUEST" />
+            <mule:error-mapping sourceType="HTTP:UNAUTHORIZED" targetType="STUDENTAPI:UNAUTHORIZED" />
+            <mule:error-mapping sourceType="HTTP:FORBIDDEN" targetType="STUDENTAPI:FORBIDDEN" />
+            <mule:error-mapping sourceType="HTTP:METHOD_NOT_ALLOWED" targetType="STUDENTAPI:METHOD_NOT_ALLOWED" />
+            <mule:error-mapping sourceType="HTTP:NOT_FOUND" targetType="STUDENTAPI:NOT_FOUND" />
+            <mule:error-mapping sourceType="HTTP:NOT_ACCEPTABLE" targetType="STUDENTAPI:NOT_ACCEPTABLE" />
+            <mule:error-mapping sourceType="HTTP:UNSUPPORTED_MEDIA_TYPE" targetType="STUDENTAPI:UNSUPPORTED_MEDIA_TYPE" />
+            <mule:error-mapping sourceType="HTTP:TOO_MANY_REQUESTS" targetType="STUDENTAPI:TOO_MANY_REQUESTS" />
+            <mule:error-mapping sourceType="HTTP:INTERNAL_SERVER_ERROR" targetType="STUDENTAPI:INTERNAL_SERVER_ERROR" />
+            <mule:error-mapping sourceType="HTTP:SERVICE_UNAVAILABLE" targetType="STUDENTAPI:SERVICE_UNAVAILABLE" />
+            <mule:error-mapping sourceType="HTTP:RETRY_EXHAUSTED" targetType="STUDENTAPI:RETRY_EXHAUSTED" />
+                <http:body>
+            <![CDATA[#[output application/json --- vars['create-student-request-data']]
+]]>
+        </http:body>
+    
+            <http:headers>
+            <![CDATA[#[ { 'Accept': 'application/json' } filterObject $ != null ]]]>
+        </http:headers>
+            </http:request>
+    <mule:set-payload value="#[payload]" mimeType="application/json" />
+        </body>
+                    <output type="string" />
+                <output-attributes type="java::org.mule.extension.http.api.HttpResponseAttributes" />
+
+        <errors>
+                            <error type="PARSING"/>
+                            <error type="TIMEOUT"/>
+                            <error type="SECURITY"/>
+                            <error type="CONNECTIVITY"/>
+                            <error type="BAD_REQUEST"/>
+                            <error type="UNAUTHORIZED"/>
+                            <error type="FORBIDDEN"/>
+                            <error type="METHOD_NOT_ALLOWED"/>
+                            <error type="NOT_FOUND"/>
+                            <error type="NOT_ACCEPTABLE"/>
+                            <error type="UNSUPPORTED_MEDIA_TYPE"/>
+                            <error type="TOO_MANY_REQUESTS"/>
+                            <error type="INTERNAL_SERVER_ERROR"/>
+                            <error type="SERVICE_UNAVAILABLE"/>
+                            <error type="RETRY_EXHAUSTED"/>
+                    </errors>
+    </operation>
+    <operation name="get-student-by-id"  >
+        <parameters>
+                                        <parameter name="id"
+                                        type="string"
+                                        use="REQUIRED"                    />
+                                    <parameter name="request-streaming-mode" displayName="Request streaming mode" type="request-streaming-mode-enum" use="OPTIONAL" tab="Advanced" />
+        </parameters>
+        <body>
+                <http:request config-ref="studentapi-httpreq-config"
+              path="/students/{ID}"
+              method="GET"
+              requestStreamingMode='#[vars["request-streaming-mode"]]'
+>
+                <mule:error-mapping sourceType="HTTP:PARSING" targetType="STUDENTAPI:PARSING" />
+            <mule:error-mapping sourceType="HTTP:TIMEOUT" targetType="STUDENTAPI:TIMEOUT" />
+            <mule:error-mapping sourceType="HTTP:SECURITY" targetType="STUDENTAPI:SECURITY" />
+            <mule:error-mapping sourceType="HTTP:CONNECTIVITY" targetType="STUDENTAPI:CONNECTIVITY" />
+            <mule:error-mapping sourceType="HTTP:BAD_REQUEST" targetType="STUDENTAPI:BAD_REQUEST" />
+            <mule:error-mapping sourceType="HTTP:UNAUTHORIZED" targetType="STUDENTAPI:UNAUTHORIZED" />
+            <mule:error-mapping sourceType="HTTP:FORBIDDEN" targetType="STUDENTAPI:FORBIDDEN" />
+            <mule:error-mapping sourceType="HTTP:METHOD_NOT_ALLOWED" targetType="STUDENTAPI:METHOD_NOT_ALLOWED" />
+            <mule:error-mapping sourceType="HTTP:NOT_FOUND" targetType="STUDENTAPI:NOT_FOUND" />
+            <mule:error-mapping sourceType="HTTP:NOT_ACCEPTABLE" targetType="STUDENTAPI:NOT_ACCEPTABLE" />
+            <mule:error-mapping sourceType="HTTP:UNSUPPORTED_MEDIA_TYPE" targetType="STUDENTAPI:UNSUPPORTED_MEDIA_TYPE" />
+            <mule:error-mapping sourceType="HTTP:TOO_MANY_REQUESTS" targetType="STUDENTAPI:TOO_MANY_REQUESTS" />
+            <mule:error-mapping sourceType="HTTP:INTERNAL_SERVER_ERROR" targetType="STUDENTAPI:INTERNAL_SERVER_ERROR" />
+            <mule:error-mapping sourceType="HTTP:SERVICE_UNAVAILABLE" targetType="STUDENTAPI:SERVICE_UNAVAILABLE" />
+            <mule:error-mapping sourceType="HTTP:RETRY_EXHAUSTED" targetType="STUDENTAPI:RETRY_EXHAUSTED" />
+        
+            <http:headers>
+            <![CDATA[#[ { 'Accept': 'application/json' } filterObject $ != null ]]]>
+        </http:headers>
+                <http:uri-params>
+            <![CDATA[#[ { 'ID': vars['id'] } filterObject $ != null ]]]>
+        </http:uri-params>
+        </http:request>
+    <mule:set-payload value="#[payload]" mimeType="application/json" />
+        </body>
+                    <output type="get-student-by-id-response-type" />
+                <output-attributes type="java::org.mule.extension.http.api.HttpResponseAttributes" />
+
+        <errors>
+                            <error type="PARSING"/>
+                            <error type="TIMEOUT"/>
+                            <error type="SECURITY"/>
+                            <error type="CONNECTIVITY"/>
+                            <error type="BAD_REQUEST"/>
+                            <error type="UNAUTHORIZED"/>
+                            <error type="FORBIDDEN"/>
+                            <error type="METHOD_NOT_ALLOWED"/>
+                            <error type="NOT_FOUND"/>
+                            <error type="NOT_ACCEPTABLE"/>
+                            <error type="UNSUPPORTED_MEDIA_TYPE"/>
+                            <error type="TOO_MANY_REQUESTS"/>
+                            <error type="INTERNAL_SERVER_ERROR"/>
+                            <error type="SERVICE_UNAVAILABLE"/>
+                            <error type="RETRY_EXHAUSTED"/>
+                    </errors>
+    </operation>
+    <operation name="update-student-by-id"  >
+        <parameters>
+                            <parameter name="update-student-by-id-request-data" type="update-student-by-id-request-type" use="REQUIRED" role="PRIMARY" />
+                                        <parameter name="id"
+                                        type="string"
+                                        use="REQUIRED"                    />
+                                    <parameter name="request-streaming-mode" displayName="Request streaming mode" type="request-streaming-mode-enum" use="OPTIONAL" tab="Advanced" />
+        </parameters>
+        <body>
+                <http:request config-ref="studentapi-httpreq-config"
+              path="/students/{ID}"
+              method="PUT"
+              requestStreamingMode='#[vars["request-streaming-mode"]]'
+>
+                <mule:error-mapping sourceType="HTTP:PARSING" targetType="STUDENTAPI:PARSING" />
+            <mule:error-mapping sourceType="HTTP:TIMEOUT" targetType="STUDENTAPI:TIMEOUT" />
+            <mule:error-mapping sourceType="HTTP:SECURITY" targetType="STUDENTAPI:SECURITY" />
+            <mule:error-mapping sourceType="HTTP:CONNECTIVITY" targetType="STUDENTAPI:CONNECTIVITY" />
+            <mule:error-mapping sourceType="HTTP:BAD_REQUEST" targetType="STUDENTAPI:BAD_REQUEST" />
+            <mule:error-mapping sourceType="HTTP:UNAUTHORIZED" targetType="STUDENTAPI:UNAUTHORIZED" />
+            <mule:error-mapping sourceType="HTTP:FORBIDDEN" targetType="STUDENTAPI:FORBIDDEN" />
+            <mule:error-mapping sourceType="HTTP:METHOD_NOT_ALLOWED" targetType="STUDENTAPI:METHOD_NOT_ALLOWED" />
+            <mule:error-mapping sourceType="HTTP:NOT_FOUND" targetType="STUDENTAPI:NOT_FOUND" />
+            <mule:error-mapping sourceType="HTTP:NOT_ACCEPTABLE" targetType="STUDENTAPI:NOT_ACCEPTABLE" />
+            <mule:error-mapping sourceType="HTTP:UNSUPPORTED_MEDIA_TYPE" targetType="STUDENTAPI:UNSUPPORTED_MEDIA_TYPE" />
+            <mule:error-mapping sourceType="HTTP:TOO_MANY_REQUESTS" targetType="STUDENTAPI:TOO_MANY_REQUESTS" />
+            <mule:error-mapping sourceType="HTTP:INTERNAL_SERVER_ERROR" targetType="STUDENTAPI:INTERNAL_SERVER_ERROR" />
+            <mule:error-mapping sourceType="HTTP:SERVICE_UNAVAILABLE" targetType="STUDENTAPI:SERVICE_UNAVAILABLE" />
+            <mule:error-mapping sourceType="HTTP:RETRY_EXHAUSTED" targetType="STUDENTAPI:RETRY_EXHAUSTED" />
+                <http:body>
+            <![CDATA[#[output application/json --- vars['update-student-by-id-request-data']]
+]]>
+        </http:body>
+    
+            <http:headers>
+            <![CDATA[#[ { 'Accept': 'application/json' } filterObject $ != null ]]]>
+        </http:headers>
+                <http:uri-params>
+            <![CDATA[#[ { 'ID': vars['id'] } filterObject $ != null ]]]>
+        </http:uri-params>
+        </http:request>
+    <mule:set-payload value="#[payload]" mimeType="application/json" />
+        </body>
+                    <output type="string" />
+                <output-attributes type="java::org.mule.extension.http.api.HttpResponseAttributes" />
+
+        <errors>
+                            <error type="PARSING"/>
+                            <error type="TIMEOUT"/>
+                            <error type="SECURITY"/>
+                            <error type="CONNECTIVITY"/>
+                            <error type="BAD_REQUEST"/>
+                            <error type="UNAUTHORIZED"/>
+                            <error type="FORBIDDEN"/>
+                            <error type="METHOD_NOT_ALLOWED"/>
+                            <error type="NOT_FOUND"/>
+                            <error type="NOT_ACCEPTABLE"/>
+                            <error type="UNSUPPORTED_MEDIA_TYPE"/>
+                            <error type="TOO_MANY_REQUESTS"/>
+                            <error type="INTERNAL_SERVER_ERROR"/>
+                            <error type="SERVICE_UNAVAILABLE"/>
+                            <error type="RETRY_EXHAUSTED"/>
+                    </errors>
+    </operation>
+    <operation name="delete-student-by-id"  >
+        <parameters>
+                                        <parameter name="id"
+                                        type="string"
+                                        use="REQUIRED"                    />
+                                    <parameter name="request-streaming-mode" displayName="Request streaming mode" type="request-streaming-mode-enum" use="OPTIONAL" tab="Advanced" />
+        </parameters>
+        <body>
+                <http:request config-ref="studentapi-httpreq-config"
+              path="/students/{ID}"
+              method="DELETE"
+              requestStreamingMode='#[vars["request-streaming-mode"]]'
+>
+                <mule:error-mapping sourceType="HTTP:PARSING" targetType="STUDENTAPI:PARSING" />
+            <mule:error-mapping sourceType="HTTP:TIMEOUT" targetType="STUDENTAPI:TIMEOUT" />
+            <mule:error-mapping sourceType="HTTP:SECURITY" targetType="STUDENTAPI:SECURITY" />
+            <mule:error-mapping sourceType="HTTP:CONNECTIVITY" targetType="STUDENTAPI:CONNECTIVITY" />
+            <mule:error-mapping sourceType="HTTP:BAD_REQUEST" targetType="STUDENTAPI:BAD_REQUEST" />
+            <mule:error-mapping sourceType="HTTP:UNAUTHORIZED" targetType="STUDENTAPI:UNAUTHORIZED" />
+            <mule:error-mapping sourceType="HTTP:FORBIDDEN" targetType="STUDENTAPI:FORBIDDEN" />
+            <mule:error-mapping sourceType="HTTP:METHOD_NOT_ALLOWED" targetType="STUDENTAPI:METHOD_NOT_ALLOWED" />
+            <mule:error-mapping sourceType="HTTP:NOT_FOUND" targetType="STUDENTAPI:NOT_FOUND" />
+            <mule:error-mapping sourceType="HTTP:NOT_ACCEPTABLE" targetType="STUDENTAPI:NOT_ACCEPTABLE" />
+            <mule:error-mapping sourceType="HTTP:UNSUPPORTED_MEDIA_TYPE" targetType="STUDENTAPI:UNSUPPORTED_MEDIA_TYPE" />
+            <mule:error-mapping sourceType="HTTP:TOO_MANY_REQUESTS" targetType="STUDENTAPI:TOO_MANY_REQUESTS" />
+            <mule:error-mapping sourceType="HTTP:INTERNAL_SERVER_ERROR" targetType="STUDENTAPI:INTERNAL_SERVER_ERROR" />
+            <mule:error-mapping sourceType="HTTP:SERVICE_UNAVAILABLE" targetType="STUDENTAPI:SERVICE_UNAVAILABLE" />
+            <mule:error-mapping sourceType="HTTP:RETRY_EXHAUSTED" targetType="STUDENTAPI:RETRY_EXHAUSTED" />
+        
+            <http:headers>
+            <![CDATA[#[ { 'Accept': 'application/json' } filterObject $ != null ]]]>
+        </http:headers>
+                <http:uri-params>
+            <![CDATA[#[ { 'ID': vars['id'] } filterObject $ != null ]]]>
+        </http:uri-params>
+        </http:request>
+    <mule:set-payload value="#[payload]" mimeType="application/json" />
+        </body>
+                    <output type="string" />
+                <output-attributes type="java::org.mule.extension.http.api.HttpResponseAttributes" />
+
+        <errors>
+                            <error type="PARSING"/>
+                            <error type="TIMEOUT"/>
+                            <error type="SECURITY"/>
+                            <error type="CONNECTIVITY"/>
+                            <error type="BAD_REQUEST"/>
+                            <error type="UNAUTHORIZED"/>
+                            <error type="FORBIDDEN"/>
+                            <error type="METHOD_NOT_ALLOWED"/>
+                            <error type="NOT_FOUND"/>
+                            <error type="NOT_ACCEPTABLE"/>
+                            <error type="UNSUPPORTED_MEDIA_TYPE"/>
+                            <error type="TOO_MANY_REQUESTS"/>
+                            <error type="INTERNAL_SERVER_ERROR"/>
+                            <error type="SERVICE_UNAVAILABLE"/>
+                            <error type="RETRY_EXHAUSTED"/>
+                    </errors>
+    </operation>
+    <operation name="get-classrooms"  >
+        <parameters>
+                                                <parameter name="request-streaming-mode" displayName="Request streaming mode" type="request-streaming-mode-enum" use="OPTIONAL" tab="Advanced" />
+        </parameters>
+        <body>
+                <http:request config-ref="studentapi-httpreq-config"
+              path="/classroom"
+              method="GET"
+              requestStreamingMode='#[vars["request-streaming-mode"]]'
+>
+                <mule:error-mapping sourceType="HTTP:PARSING" targetType="STUDENTAPI:PARSING" />
+            <mule:error-mapping sourceType="HTTP:TIMEOUT" targetType="STUDENTAPI:TIMEOUT" />
+            <mule:error-mapping sourceType="HTTP:SECURITY" targetType="STUDENTAPI:SECURITY" />
+            <mule:error-mapping sourceType="HTTP:CONNECTIVITY" targetType="STUDENTAPI:CONNECTIVITY" />
+            <mule:error-mapping sourceType="HTTP:BAD_REQUEST" targetType="STUDENTAPI:BAD_REQUEST" />
+            <mule:error-mapping sourceType="HTTP:UNAUTHORIZED" targetType="STUDENTAPI:UNAUTHORIZED" />
+            <mule:error-mapping sourceType="HTTP:FORBIDDEN" targetType="STUDENTAPI:FORBIDDEN" />
+            <mule:error-mapping sourceType="HTTP:METHOD_NOT_ALLOWED" targetType="STUDENTAPI:METHOD_NOT_ALLOWED" />
+            <mule:error-mapping sourceType="HTTP:NOT_FOUND" targetType="STUDENTAPI:NOT_FOUND" />
+            <mule:error-mapping sourceType="HTTP:NOT_ACCEPTABLE" targetType="STUDENTAPI:NOT_ACCEPTABLE" />
+            <mule:error-mapping sourceType="HTTP:UNSUPPORTED_MEDIA_TYPE" targetType="STUDENTAPI:UNSUPPORTED_MEDIA_TYPE" />
+            <mule:error-mapping sourceType="HTTP:TOO_MANY_REQUESTS" targetType="STUDENTAPI:TOO_MANY_REQUESTS" />
+            <mule:error-mapping sourceType="HTTP:INTERNAL_SERVER_ERROR" targetType="STUDENTAPI:INTERNAL_SERVER_ERROR" />
+            <mule:error-mapping sourceType="HTTP:SERVICE_UNAVAILABLE" targetType="STUDENTAPI:SERVICE_UNAVAILABLE" />
+            <mule:error-mapping sourceType="HTTP:RETRY_EXHAUSTED" targetType="STUDENTAPI:RETRY_EXHAUSTED" />
+        
+            <http:headers>
+            <![CDATA[#[ { 'Accept': 'application/json' } filterObject $ != null ]]]>
+        </http:headers>
+            </http:request>
+    <mule:set-payload value="#[payload]" mimeType="application/json" />
+        </body>
+                    <output type="get-classrooms-response-type" />
+                <output-attributes type="java::org.mule.extension.http.api.HttpResponseAttributes" />
+
+        <errors>
+                            <error type="PARSING"/>
+                            <error type="TIMEOUT"/>
+                            <error type="SECURITY"/>
+                            <error type="CONNECTIVITY"/>
+                            <error type="BAD_REQUEST"/>
+                            <error type="UNAUTHORIZED"/>
+                            <error type="FORBIDDEN"/>
+                            <error type="METHOD_NOT_ALLOWED"/>
+                            <error type="NOT_FOUND"/>
+                            <error type="NOT_ACCEPTABLE"/>
+                            <error type="UNSUPPORTED_MEDIA_TYPE"/>
+                            <error type="TOO_MANY_REQUESTS"/>
+                            <error type="INTERNAL_SERVER_ERROR"/>
+                            <error type="SERVICE_UNAVAILABLE"/>
+                            <error type="RETRY_EXHAUSTED"/>
+                    </errors>
+    </operation>
+    <operation name="create-classroom"  >
+        <parameters>
+                            <parameter name="create-classroom-request-data" type="create-classroom-request-type" use="REQUIRED" role="PRIMARY" />
+                                                <parameter name="request-streaming-mode" displayName="Request streaming mode" type="request-streaming-mode-enum" use="OPTIONAL" tab="Advanced" />
+        </parameters>
+        <body>
+                <http:request config-ref="studentapi-httpreq-config"
+              path="/classroom"
+              method="POST"
+              requestStreamingMode='#[vars["request-streaming-mode"]]'
+>
+                <mule:error-mapping sourceType="HTTP:PARSING" targetType="STUDENTAPI:PARSING" />
+            <mule:error-mapping sourceType="HTTP:TIMEOUT" targetType="STUDENTAPI:TIMEOUT" />
+            <mule:error-mapping sourceType="HTTP:SECURITY" targetType="STUDENTAPI:SECURITY" />
+            <mule:error-mapping sourceType="HTTP:CONNECTIVITY" targetType="STUDENTAPI:CONNECTIVITY" />
+            <mule:error-mapping sourceType="HTTP:BAD_REQUEST" targetType="STUDENTAPI:BAD_REQUEST" />
+            <mule:error-mapping sourceType="HTTP:UNAUTHORIZED" targetType="STUDENTAPI:UNAUTHORIZED" />
+            <mule:error-mapping sourceType="HTTP:FORBIDDEN" targetType="STUDENTAPI:FORBIDDEN" />
+            <mule:error-mapping sourceType="HTTP:METHOD_NOT_ALLOWED" targetType="STUDENTAPI:METHOD_NOT_ALLOWED" />
+            <mule:error-mapping sourceType="HTTP:NOT_FOUND" targetType="STUDENTAPI:NOT_FOUND" />
+            <mule:error-mapping sourceType="HTTP:NOT_ACCEPTABLE" targetType="STUDENTAPI:NOT_ACCEPTABLE" />
+            <mule:error-mapping sourceType="HTTP:UNSUPPORTED_MEDIA_TYPE" targetType="STUDENTAPI:UNSUPPORTED_MEDIA_TYPE" />
+            <mule:error-mapping sourceType="HTTP:TOO_MANY_REQUESTS" targetType="STUDENTAPI:TOO_MANY_REQUESTS" />
+            <mule:error-mapping sourceType="HTTP:INTERNAL_SERVER_ERROR" targetType="STUDENTAPI:INTERNAL_SERVER_ERROR" />
+            <mule:error-mapping sourceType="HTTP:SERVICE_UNAVAILABLE" targetType="STUDENTAPI:SERVICE_UNAVAILABLE" />
+            <mule:error-mapping sourceType="HTTP:RETRY_EXHAUSTED" targetType="STUDENTAPI:RETRY_EXHAUSTED" />
+                <http:body>
+            <![CDATA[#[output application/json --- vars['create-classroom-request-data']]
+]]>
+        </http:body>
+    
+            <http:headers>
+            <![CDATA[#[ { 'Accept': 'application/json' } filterObject $ != null ]]]>
+        </http:headers>
+            </http:request>
+    <mule:set-payload value="#[payload]" mimeType="application/json" />
+        </body>
+                    <output type="string" />
+                <output-attributes type="java::org.mule.extension.http.api.HttpResponseAttributes" />
+
+        <errors>
+                            <error type="PARSING"/>
+                            <error type="TIMEOUT"/>
+                            <error type="SECURITY"/>
+                            <error type="CONNECTIVITY"/>
+                            <error type="BAD_REQUEST"/>
+                            <error type="UNAUTHORIZED"/>
+                            <error type="FORBIDDEN"/>
+                            <error type="METHOD_NOT_ALLOWED"/>
+                            <error type="NOT_FOUND"/>
+                            <error type="NOT_ACCEPTABLE"/>
+                            <error type="UNSUPPORTED_MEDIA_TYPE"/>
+                            <error type="TOO_MANY_REQUESTS"/>
+                            <error type="INTERNAL_SERVER_ERROR"/>
+                            <error type="SERVICE_UNAVAILABLE"/>
+                            <error type="RETRY_EXHAUSTED"/>
+                    </errors>
+    </operation>
+    <operation name="get-classroom-by-id"  >
+        <parameters>
+                                        <parameter name="id"
+                                        type="string"
+                                        use="REQUIRED"                    />
+                                    <parameter name="request-streaming-mode" displayName="Request streaming mode" type="request-streaming-mode-enum" use="OPTIONAL" tab="Advanced" />
+        </parameters>
+        <body>
+                <http:request config-ref="studentapi-httpreq-config"
+              path="/classroom/{ID}"
+              method="GET"
+              requestStreamingMode='#[vars["request-streaming-mode"]]'
+>
+                <mule:error-mapping sourceType="HTTP:PARSING" targetType="STUDENTAPI:PARSING" />
+            <mule:error-mapping sourceType="HTTP:TIMEOUT" targetType="STUDENTAPI:TIMEOUT" />
+            <mule:error-mapping sourceType="HTTP:SECURITY" targetType="STUDENTAPI:SECURITY" />
+            <mule:error-mapping sourceType="HTTP:CONNECTIVITY" targetType="STUDENTAPI:CONNECTIVITY" />
+            <mule:error-mapping sourceType="HTTP:BAD_REQUEST" targetType="STUDENTAPI:BAD_REQUEST" />
+            <mule:error-mapping sourceType="HTTP:UNAUTHORIZED" targetType="STUDENTAPI:UNAUTHORIZED" />
+            <mule:error-mapping sourceType="HTTP:FORBIDDEN" targetType="STUDENTAPI:FORBIDDEN" />
+            <mule:error-mapping sourceType="HTTP:METHOD_NOT_ALLOWED" targetType="STUDENTAPI:METHOD_NOT_ALLOWED" />
+            <mule:error-mapping sourceType="HTTP:NOT_FOUND" targetType="STUDENTAPI:NOT_FOUND" />
+            <mule:error-mapping sourceType="HTTP:NOT_ACCEPTABLE" targetType="STUDENTAPI:NOT_ACCEPTABLE" />
+            <mule:error-mapping sourceType="HTTP:UNSUPPORTED_MEDIA_TYPE" targetType="STUDENTAPI:UNSUPPORTED_MEDIA_TYPE" />
+            <mule:error-mapping sourceType="HTTP:TOO_MANY_REQUESTS" targetType="STUDENTAPI:TOO_MANY_REQUESTS" />
+            <mule:error-mapping sourceType="HTTP:INTERNAL_SERVER_ERROR" targetType="STUDENTAPI:INTERNAL_SERVER_ERROR" />
+            <mule:error-mapping sourceType="HTTP:SERVICE_UNAVAILABLE" targetType="STUDENTAPI:SERVICE_UNAVAILABLE" />
+            <mule:error-mapping sourceType="HTTP:RETRY_EXHAUSTED" targetType="STUDENTAPI:RETRY_EXHAUSTED" />
+        
+            <http:headers>
+            <![CDATA[#[ { 'Accept': 'application/json' } filterObject $ != null ]]]>
+        </http:headers>
+                <http:uri-params>
+            <![CDATA[#[ { 'ID': vars['id'] } filterObject $ != null ]]]>
+        </http:uri-params>
+        </http:request>
+    <mule:set-payload value="#[payload]" mimeType="application/json" />
+        </body>
+                    <output type="get-classroom-by-id-response-type" />
+                <output-attributes type="java::org.mule.extension.http.api.HttpResponseAttributes" />
+
+        <errors>
+                            <error type="PARSING"/>
+                            <error type="TIMEOUT"/>
+                            <error type="SECURITY"/>
+                            <error type="CONNECTIVITY"/>
+                            <error type="BAD_REQUEST"/>
+                            <error type="UNAUTHORIZED"/>
+                            <error type="FORBIDDEN"/>
+                            <error type="METHOD_NOT_ALLOWED"/>
+                            <error type="NOT_FOUND"/>
+                            <error type="NOT_ACCEPTABLE"/>
+                            <error type="UNSUPPORTED_MEDIA_TYPE"/>
+                            <error type="TOO_MANY_REQUESTS"/>
+                            <error type="INTERNAL_SERVER_ERROR"/>
+                            <error type="SERVICE_UNAVAILABLE"/>
+                            <error type="RETRY_EXHAUSTED"/>
+                    </errors>
+    </operation>
+    <operation name="update-classroom-by-id"  >
+        <parameters>
+                            <parameter name="update-classroom-by-id-request-data" type="update-classroom-by-id-request-type" use="REQUIRED" role="PRIMARY" />
+                                        <parameter name="id"
+                                        type="string"
+                                        use="REQUIRED"                    />
+                                    <parameter name="request-streaming-mode" displayName="Request streaming mode" type="request-streaming-mode-enum" use="OPTIONAL" tab="Advanced" />
+        </parameters>
+        <body>
+                <http:request config-ref="studentapi-httpreq-config"
+              path="/classroom/{ID}"
+              method="PUT"
+              requestStreamingMode='#[vars["request-streaming-mode"]]'
+>
+                <mule:error-mapping sourceType="HTTP:PARSING" targetType="STUDENTAPI:PARSING" />
+            <mule:error-mapping sourceType="HTTP:TIMEOUT" targetType="STUDENTAPI:TIMEOUT" />
+            <mule:error-mapping sourceType="HTTP:SECURITY" targetType="STUDENTAPI:SECURITY" />
+            <mule:error-mapping sourceType="HTTP:CONNECTIVITY" targetType="STUDENTAPI:CONNECTIVITY" />
+            <mule:error-mapping sourceType="HTTP:BAD_REQUEST" targetType="STUDENTAPI:BAD_REQUEST" />
+            <mule:error-mapping sourceType="HTTP:UNAUTHORIZED" targetType="STUDENTAPI:UNAUTHORIZED" />
+            <mule:error-mapping sourceType="HTTP:FORBIDDEN" targetType="STUDENTAPI:FORBIDDEN" />
+            <mule:error-mapping sourceType="HTTP:METHOD_NOT_ALLOWED" targetType="STUDENTAPI:METHOD_NOT_ALLOWED" />
+            <mule:error-mapping sourceType="HTTP:NOT_FOUND" targetType="STUDENTAPI:NOT_FOUND" />
+            <mule:error-mapping sourceType="HTTP:NOT_ACCEPTABLE" targetType="STUDENTAPI:NOT_ACCEPTABLE" />
+            <mule:error-mapping sourceType="HTTP:UNSUPPORTED_MEDIA_TYPE" targetType="STUDENTAPI:UNSUPPORTED_MEDIA_TYPE" />
+            <mule:error-mapping sourceType="HTTP:TOO_MANY_REQUESTS" targetType="STUDENTAPI:TOO_MANY_REQUESTS" />
+            <mule:error-mapping sourceType="HTTP:INTERNAL_SERVER_ERROR" targetType="STUDENTAPI:INTERNAL_SERVER_ERROR" />
+            <mule:error-mapping sourceType="HTTP:SERVICE_UNAVAILABLE" targetType="STUDENTAPI:SERVICE_UNAVAILABLE" />
+            <mule:error-mapping sourceType="HTTP:RETRY_EXHAUSTED" targetType="STUDENTAPI:RETRY_EXHAUSTED" />
+                <http:body>
+            <![CDATA[#[output application/json --- vars['update-classroom-by-id-request-data']]
+]]>
+        </http:body>
+    
+            <http:headers>
+            <![CDATA[#[ { 'Accept': 'application/json' } filterObject $ != null ]]]>
+        </http:headers>
+                <http:uri-params>
+            <![CDATA[#[ { 'ID': vars['id'] } filterObject $ != null ]]]>
+        </http:uri-params>
+        </http:request>
+    <mule:set-payload value="#[payload]" mimeType="application/json" />
+        </body>
+                    <output type="string" />
+                <output-attributes type="java::org.mule.extension.http.api.HttpResponseAttributes" />
+
+        <errors>
+                            <error type="PARSING"/>
+                            <error type="TIMEOUT"/>
+                            <error type="SECURITY"/>
+                            <error type="CONNECTIVITY"/>
+                            <error type="BAD_REQUEST"/>
+                            <error type="UNAUTHORIZED"/>
+                            <error type="FORBIDDEN"/>
+                            <error type="METHOD_NOT_ALLOWED"/>
+                            <error type="NOT_FOUND"/>
+                            <error type="NOT_ACCEPTABLE"/>
+                            <error type="UNSUPPORTED_MEDIA_TYPE"/>
+                            <error type="TOO_MANY_REQUESTS"/>
+                            <error type="INTERNAL_SERVER_ERROR"/>
+                            <error type="SERVICE_UNAVAILABLE"/>
+                            <error type="RETRY_EXHAUSTED"/>
+                    </errors>
+    </operation>
+    <operation name="delete-classroom-by-id"  >
+        <parameters>
+                                        <parameter name="id"
+                                        type="string"
+                                        use="REQUIRED"                    />
+                                    <parameter name="request-streaming-mode" displayName="Request streaming mode" type="request-streaming-mode-enum" use="OPTIONAL" tab="Advanced" />
+        </parameters>
+        <body>
+                <http:request config-ref="studentapi-httpreq-config"
+              path="/classroom/{ID}"
+              method="DELETE"
+              requestStreamingMode='#[vars["request-streaming-mode"]]'
+>
+                <mule:error-mapping sourceType="HTTP:PARSING" targetType="STUDENTAPI:PARSING" />
+            <mule:error-mapping sourceType="HTTP:TIMEOUT" targetType="STUDENTAPI:TIMEOUT" />
+            <mule:error-mapping sourceType="HTTP:SECURITY" targetType="STUDENTAPI:SECURITY" />
+            <mule:error-mapping sourceType="HTTP:CONNECTIVITY" targetType="STUDENTAPI:CONNECTIVITY" />
+            <mule:error-mapping sourceType="HTTP:BAD_REQUEST" targetType="STUDENTAPI:BAD_REQUEST" />
+            <mule:error-mapping sourceType="HTTP:UNAUTHORIZED" targetType="STUDENTAPI:UNAUTHORIZED" />
+            <mule:error-mapping sourceType="HTTP:FORBIDDEN" targetType="STUDENTAPI:FORBIDDEN" />
+            <mule:error-mapping sourceType="HTTP:METHOD_NOT_ALLOWED" targetType="STUDENTAPI:METHOD_NOT_ALLOWED" />
+            <mule:error-mapping sourceType="HTTP:NOT_FOUND" targetType="STUDENTAPI:NOT_FOUND" />
+            <mule:error-mapping sourceType="HTTP:NOT_ACCEPTABLE" targetType="STUDENTAPI:NOT_ACCEPTABLE" />
+            <mule:error-mapping sourceType="HTTP:UNSUPPORTED_MEDIA_TYPE" targetType="STUDENTAPI:UNSUPPORTED_MEDIA_TYPE" />
+            <mule:error-mapping sourceType="HTTP:TOO_MANY_REQUESTS" targetType="STUDENTAPI:TOO_MANY_REQUESTS" />
+            <mule:error-mapping sourceType="HTTP:INTERNAL_SERVER_ERROR" targetType="STUDENTAPI:INTERNAL_SERVER_ERROR" />
+            <mule:error-mapping sourceType="HTTP:SERVICE_UNAVAILABLE" targetType="STUDENTAPI:SERVICE_UNAVAILABLE" />
+            <mule:error-mapping sourceType="HTTP:RETRY_EXHAUSTED" targetType="STUDENTAPI:RETRY_EXHAUSTED" />
+        
+            <http:headers>
+            <![CDATA[#[ { 'Accept': 'application/json' } filterObject $ != null ]]]>
+        </http:headers>
+                <http:uri-params>
+            <![CDATA[#[ { 'ID': vars['id'] } filterObject $ != null ]]]>
+        </http:uri-params>
+        </http:request>
+    <mule:set-payload value="#[payload]" mimeType="application/json" />
+        </body>
+                    <output type="string" />
+                <output-attributes type="java::org.mule.extension.http.api.HttpResponseAttributes" />
+
+        <errors>
+                            <error type="PARSING"/>
+                            <error type="TIMEOUT"/>
+                            <error type="SECURITY"/>
+                            <error type="CONNECTIVITY"/>
+                            <error type="BAD_REQUEST"/>
+                            <error type="UNAUTHORIZED"/>
+                            <error type="FORBIDDEN"/>
+                            <error type="METHOD_NOT_ALLOWED"/>
+                            <error type="NOT_FOUND"/>
+                            <error type="NOT_ACCEPTABLE"/>
+                            <error type="UNSUPPORTED_MEDIA_TYPE"/>
+                            <error type="TOO_MANY_REQUESTS"/>
+                            <error type="INTERNAL_SERVER_ERROR"/>
+                            <error type="SERVICE_UNAVAILABLE"/>
+                            <error type="RETRY_EXHAUSTED"/>
+                    </errors>
+    </operation>
+    <operation name="get-employees"  >
+        <parameters>
+                                                <parameter name="request-streaming-mode" displayName="Request streaming mode" type="request-streaming-mode-enum" use="OPTIONAL" tab="Advanced" />
+        </parameters>
+        <body>
+                <http:request config-ref="studentapi-httpreq-config"
+              path="/employee"
+              method="GET"
+              requestStreamingMode='#[vars["request-streaming-mode"]]'
+>
+                <mule:error-mapping sourceType="HTTP:PARSING" targetType="STUDENTAPI:PARSING" />
+            <mule:error-mapping sourceType="HTTP:TIMEOUT" targetType="STUDENTAPI:TIMEOUT" />
+            <mule:error-mapping sourceType="HTTP:SECURITY" targetType="STUDENTAPI:SECURITY" />
+            <mule:error-mapping sourceType="HTTP:CONNECTIVITY" targetType="STUDENTAPI:CONNECTIVITY" />
+            <mule:error-mapping sourceType="HTTP:BAD_REQUEST" targetType="STUDENTAPI:BAD_REQUEST" />
+            <mule:error-mapping sourceType="HTTP:UNAUTHORIZED" targetType="STUDENTAPI:UNAUTHORIZED" />
+            <mule:error-mapping sourceType="HTTP:FORBIDDEN" targetType="STUDENTAPI:FORBIDDEN" />
+            <mule:error-mapping sourceType="HTTP:METHOD_NOT_ALLOWED" targetType="STUDENTAPI:METHOD_NOT_ALLOWED" />
+            <mule:error-mapping sourceType="HTTP:NOT_FOUND" targetType="STUDENTAPI:NOT_FOUND" />
+            <mule:error-mapping sourceType="HTTP:NOT_ACCEPTABLE" targetType="STUDENTAPI:NOT_ACCEPTABLE" />
+            <mule:error-mapping sourceType="HTTP:UNSUPPORTED_MEDIA_TYPE" targetType="STUDENTAPI:UNSUPPORTED_MEDIA_TYPE" />
+            <mule:error-mapping sourceType="HTTP:TOO_MANY_REQUESTS" targetType="STUDENTAPI:TOO_MANY_REQUESTS" />
+            <mule:error-mapping sourceType="HTTP:INTERNAL_SERVER_ERROR" targetType="STUDENTAPI:INTERNAL_SERVER_ERROR" />
+            <mule:error-mapping sourceType="HTTP:SERVICE_UNAVAILABLE" targetType="STUDENTAPI:SERVICE_UNAVAILABLE" />
+            <mule:error-mapping sourceType="HTTP:RETRY_EXHAUSTED" targetType="STUDENTAPI:RETRY_EXHAUSTED" />
+        
+            <http:headers>
+            <![CDATA[#[ { 'Accept': 'application/json' } filterObject $ != null ]]]>
+        </http:headers>
+            </http:request>
+    <mule:set-payload value="#[payload]" mimeType="application/json" />
+        </body>
+                    <output type="get-employees-response-type" />
+                <output-attributes type="java::org.mule.extension.http.api.HttpResponseAttributes" />
+
+        <errors>
+                            <error type="PARSING"/>
+                            <error type="TIMEOUT"/>
+                            <error type="SECURITY"/>
+                            <error type="CONNECTIVITY"/>
+                            <error type="BAD_REQUEST"/>
+                            <error type="UNAUTHORIZED"/>
+                            <error type="FORBIDDEN"/>
+                            <error type="METHOD_NOT_ALLOWED"/>
+                            <error type="NOT_FOUND"/>
+                            <error type="NOT_ACCEPTABLE"/>
+                            <error type="UNSUPPORTED_MEDIA_TYPE"/>
+                            <error type="TOO_MANY_REQUESTS"/>
+                            <error type="INTERNAL_SERVER_ERROR"/>
+                            <error type="SERVICE_UNAVAILABLE"/>
+                            <error type="RETRY_EXHAUSTED"/>
+                    </errors>
+    </operation>
+    <operation name="create-employee"  >
+        <parameters>
+                            <parameter name="create-employee-request-data" type="create-employee-request-type" use="REQUIRED" role="PRIMARY" />
+                                                <parameter name="request-streaming-mode" displayName="Request streaming mode" type="request-streaming-mode-enum" use="OPTIONAL" tab="Advanced" />
+        </parameters>
+        <body>
+                <http:request config-ref="studentapi-httpreq-config"
+              path="/employee"
+              method="POST"
+              requestStreamingMode='#[vars["request-streaming-mode"]]'
+>
+                <mule:error-mapping sourceType="HTTP:PARSING" targetType="STUDENTAPI:PARSING" />
+            <mule:error-mapping sourceType="HTTP:TIMEOUT" targetType="STUDENTAPI:TIMEOUT" />
+            <mule:error-mapping sourceType="HTTP:SECURITY" targetType="STUDENTAPI:SECURITY" />
+            <mule:error-mapping sourceType="HTTP:CONNECTIVITY" targetType="STUDENTAPI:CONNECTIVITY" />
+            <mule:error-mapping sourceType="HTTP:BAD_REQUEST" targetType="STUDENTAPI:BAD_REQUEST" />
+            <mule:error-mapping sourceType="HTTP:UNAUTHORIZED" targetType="STUDENTAPI:UNAUTHORIZED" />
+            <mule:error-mapping sourceType="HTTP:FORBIDDEN" targetType="STUDENTAPI:FORBIDDEN" />
+            <mule:error-mapping sourceType="HTTP:METHOD_NOT_ALLOWED" targetType="STUDENTAPI:METHOD_NOT_ALLOWED" />
+            <mule:error-mapping sourceType="HTTP:NOT_FOUND" targetType="STUDENTAPI:NOT_FOUND" />
+            <mule:error-mapping sourceType="HTTP:NOT_ACCEPTABLE" targetType="STUDENTAPI:NOT_ACCEPTABLE" />
+            <mule:error-mapping sourceType="HTTP:UNSUPPORTED_MEDIA_TYPE" targetType="STUDENTAPI:UNSUPPORTED_MEDIA_TYPE" />
+            <mule:error-mapping sourceType="HTTP:TOO_MANY_REQUESTS" targetType="STUDENTAPI:TOO_MANY_REQUESTS" />
+            <mule:error-mapping sourceType="HTTP:INTERNAL_SERVER_ERROR" targetType="STUDENTAPI:INTERNAL_SERVER_ERROR" />
+            <mule:error-mapping sourceType="HTTP:SERVICE_UNAVAILABLE" targetType="STUDENTAPI:SERVICE_UNAVAILABLE" />
+            <mule:error-mapping sourceType="HTTP:RETRY_EXHAUSTED" targetType="STUDENTAPI:RETRY_EXHAUSTED" />
+                <http:body>
+            <![CDATA[#[output application/json --- vars['create-employee-request-data']]
+]]>
+        </http:body>
+    
+            <http:headers>
+            <![CDATA[#[ { 'Accept': 'application/json' } filterObject $ != null ]]]>
+        </http:headers>
+            </http:request>
+    <mule:set-payload value="#[payload]" mimeType="application/json" />
+        </body>
+                    <output type="string" />
+                <output-attributes type="java::org.mule.extension.http.api.HttpResponseAttributes" />
+
+        <errors>
+                            <error type="PARSING"/>
+                            <error type="TIMEOUT"/>
+                            <error type="SECURITY"/>
+                            <error type="CONNECTIVITY"/>
+                            <error type="BAD_REQUEST"/>
+                            <error type="UNAUTHORIZED"/>
+                            <error type="FORBIDDEN"/>
+                            <error type="METHOD_NOT_ALLOWED"/>
+                            <error type="NOT_FOUND"/>
+                            <error type="NOT_ACCEPTABLE"/>
+                            <error type="UNSUPPORTED_MEDIA_TYPE"/>
+                            <error type="TOO_MANY_REQUESTS"/>
+                            <error type="INTERNAL_SERVER_ERROR"/>
+                            <error type="SERVICE_UNAVAILABLE"/>
+                            <error type="RETRY_EXHAUSTED"/>
+                    </errors>
+    </operation>
+    <operation name="get-employee-by-id"  >
+        <parameters>
+                                        <parameter name="id"
+                                        type="string"
+                                        use="REQUIRED"                    />
+                                    <parameter name="request-streaming-mode" displayName="Request streaming mode" type="request-streaming-mode-enum" use="OPTIONAL" tab="Advanced" />
+        </parameters>
+        <body>
+                <http:request config-ref="studentapi-httpreq-config"
+              path="/employee/{ID}"
+              method="GET"
+              requestStreamingMode='#[vars["request-streaming-mode"]]'
+>
+                <mule:error-mapping sourceType="HTTP:PARSING" targetType="STUDENTAPI:PARSING" />
+            <mule:error-mapping sourceType="HTTP:TIMEOUT" targetType="STUDENTAPI:TIMEOUT" />
+            <mule:error-mapping sourceType="HTTP:SECURITY" targetType="STUDENTAPI:SECURITY" />
+            <mule:error-mapping sourceType="HTTP:CONNECTIVITY" targetType="STUDENTAPI:CONNECTIVITY" />
+            <mule:error-mapping sourceType="HTTP:BAD_REQUEST" targetType="STUDENTAPI:BAD_REQUEST" />
+            <mule:error-mapping sourceType="HTTP:UNAUTHORIZED" targetType="STUDENTAPI:UNAUTHORIZED" />
+            <mule:error-mapping sourceType="HTTP:FORBIDDEN" targetType="STUDENTAPI:FORBIDDEN" />
+            <mule:error-mapping sourceType="HTTP:METHOD_NOT_ALLOWED" targetType="STUDENTAPI:METHOD_NOT_ALLOWED" />
+            <mule:error-mapping sourceType="HTTP:NOT_FOUND" targetType="STUDENTAPI:NOT_FOUND" />
+            <mule:error-mapping sourceType="HTTP:NOT_ACCEPTABLE" targetType="STUDENTAPI:NOT_ACCEPTABLE" />
+            <mule:error-mapping sourceType="HTTP:UNSUPPORTED_MEDIA_TYPE" targetType="STUDENTAPI:UNSUPPORTED_MEDIA_TYPE" />
+            <mule:error-mapping sourceType="HTTP:TOO_MANY_REQUESTS" targetType="STUDENTAPI:TOO_MANY_REQUESTS" />
+            <mule:error-mapping sourceType="HTTP:INTERNAL_SERVER_ERROR" targetType="STUDENTAPI:INTERNAL_SERVER_ERROR" />
+            <mule:error-mapping sourceType="HTTP:SERVICE_UNAVAILABLE" targetType="STUDENTAPI:SERVICE_UNAVAILABLE" />
+            <mule:error-mapping sourceType="HTTP:RETRY_EXHAUSTED" targetType="STUDENTAPI:RETRY_EXHAUSTED" />
+        
+            <http:headers>
+            <![CDATA[#[ { 'Accept': 'application/json' } filterObject $ != null ]]]>
+        </http:headers>
+                <http:uri-params>
+            <![CDATA[#[ { 'ID': vars['id'] } filterObject $ != null ]]]>
+        </http:uri-params>
+        </http:request>
+    <mule:set-payload value="#[payload]" mimeType="application/json" />
+        </body>
+                    <output type="get-employee-by-id-response-type" />
+                <output-attributes type="java::org.mule.extension.http.api.HttpResponseAttributes" />
+
+        <errors>
+                            <error type="PARSING"/>
+                            <error type="TIMEOUT"/>
+                            <error type="SECURITY"/>
+                            <error type="CONNECTIVITY"/>
+                            <error type="BAD_REQUEST"/>
+                            <error type="UNAUTHORIZED"/>
+                            <error type="FORBIDDEN"/>
+                            <error type="METHOD_NOT_ALLOWED"/>
+                            <error type="NOT_FOUND"/>
+                            <error type="NOT_ACCEPTABLE"/>
+                            <error type="UNSUPPORTED_MEDIA_TYPE"/>
+                            <error type="TOO_MANY_REQUESTS"/>
+                            <error type="INTERNAL_SERVER_ERROR"/>
+                            <error type="SERVICE_UNAVAILABLE"/>
+                            <error type="RETRY_EXHAUSTED"/>
+                    </errors>
+    </operation>
+    <operation name="update-employee-by-id"  >
+        <parameters>
+                            <parameter name="update-employee-by-id-request-data" type="update-employee-by-id-request-type" use="REQUIRED" role="PRIMARY" />
+                                        <parameter name="id"
+                                        type="string"
+                                        use="REQUIRED"                    />
+                                    <parameter name="request-streaming-mode" displayName="Request streaming mode" type="request-streaming-mode-enum" use="OPTIONAL" tab="Advanced" />
+        </parameters>
+        <body>
+                <http:request config-ref="studentapi-httpreq-config"
+              path="/employee/{ID}"
+              method="PUT"
+              requestStreamingMode='#[vars["request-streaming-mode"]]'
+>
+                <mule:error-mapping sourceType="HTTP:PARSING" targetType="STUDENTAPI:PARSING" />
+            <mule:error-mapping sourceType="HTTP:TIMEOUT" targetType="STUDENTAPI:TIMEOUT" />
+            <mule:error-mapping sourceType="HTTP:SECURITY" targetType="STUDENTAPI:SECURITY" />
+            <mule:error-mapping sourceType="HTTP:CONNECTIVITY" targetType="STUDENTAPI:CONNECTIVITY" />
+            <mule:error-mapping sourceType="HTTP:BAD_REQUEST" targetType="STUDENTAPI:BAD_REQUEST" />
+            <mule:error-mapping sourceType="HTTP:UNAUTHORIZED" targetType="STUDENTAPI:UNAUTHORIZED" />
+            <mule:error-mapping sourceType="HTTP:FORBIDDEN" targetType="STUDENTAPI:FORBIDDEN" />
+            <mule:error-mapping sourceType="HTTP:METHOD_NOT_ALLOWED" targetType="STUDENTAPI:METHOD_NOT_ALLOWED" />
+            <mule:error-mapping sourceType="HTTP:NOT_FOUND" targetType="STUDENTAPI:NOT_FOUND" />
+            <mule:error-mapping sourceType="HTTP:NOT_ACCEPTABLE" targetType="STUDENTAPI:NOT_ACCEPTABLE" />
+            <mule:error-mapping sourceType="HTTP:UNSUPPORTED_MEDIA_TYPE" targetType="STUDENTAPI:UNSUPPORTED_MEDIA_TYPE" />
+            <mule:error-mapping sourceType="HTTP:TOO_MANY_REQUESTS" targetType="STUDENTAPI:TOO_MANY_REQUESTS" />
+            <mule:error-mapping sourceType="HTTP:INTERNAL_SERVER_ERROR" targetType="STUDENTAPI:INTERNAL_SERVER_ERROR" />
+            <mule:error-mapping sourceType="HTTP:SERVICE_UNAVAILABLE" targetType="STUDENTAPI:SERVICE_UNAVAILABLE" />
+            <mule:error-mapping sourceType="HTTP:RETRY_EXHAUSTED" targetType="STUDENTAPI:RETRY_EXHAUSTED" />
+                <http:body>
+            <![CDATA[#[output application/json --- vars['update-employee-by-id-request-data']]
+]]>
+        </http:body>
+    
+            <http:headers>
+            <![CDATA[#[ { 'Accept': 'application/json' } filterObject $ != null ]]]>
+        </http:headers>
+                <http:uri-params>
+            <![CDATA[#[ { 'ID': vars['id'] } filterObject $ != null ]]]>
+        </http:uri-params>
+        </http:request>
+    <mule:set-payload value="#[payload]" mimeType="application/json" />
+        </body>
+                    <output type="string" />
+                <output-attributes type="java::org.mule.extension.http.api.HttpResponseAttributes" />
+
+        <errors>
+                            <error type="PARSING"/>
+                            <error type="TIMEOUT"/>
+                            <error type="SECURITY"/>
+                            <error type="CONNECTIVITY"/>
+                            <error type="BAD_REQUEST"/>
+                            <error type="UNAUTHORIZED"/>
+                            <error type="FORBIDDEN"/>
+                            <error type="METHOD_NOT_ALLOWED"/>
+                            <error type="NOT_FOUND"/>
+                            <error type="NOT_ACCEPTABLE"/>
+                            <error type="UNSUPPORTED_MEDIA_TYPE"/>
+                            <error type="TOO_MANY_REQUESTS"/>
+                            <error type="INTERNAL_SERVER_ERROR"/>
+                            <error type="SERVICE_UNAVAILABLE"/>
+                            <error type="RETRY_EXHAUSTED"/>
+                    </errors>
+    </operation>
+    <operation name="delete-employee-by-id"  >
+        <parameters>
+                                        <parameter name="id"
+                                        type="string"
+                                        use="REQUIRED"                    />
+                                    <parameter name="request-streaming-mode" displayName="Request streaming mode" type="request-streaming-mode-enum" use="OPTIONAL" tab="Advanced" />
+        </parameters>
+        <body>
+                <http:request config-ref="studentapi-httpreq-config"
+              path="/employee/{ID}"
+              method="DELETE"
+              requestStreamingMode='#[vars["request-streaming-mode"]]'
+>
+                <mule:error-mapping sourceType="HTTP:PARSING" targetType="STUDENTAPI:PARSING" />
+            <mule:error-mapping sourceType="HTTP:TIMEOUT" targetType="STUDENTAPI:TIMEOUT" />
+            <mule:error-mapping sourceType="HTTP:SECURITY" targetType="STUDENTAPI:SECURITY" />
+            <mule:error-mapping sourceType="HTTP:CONNECTIVITY" targetType="STUDENTAPI:CONNECTIVITY" />
+            <mule:error-mapping sourceType="HTTP:BAD_REQUEST" targetType="STUDENTAPI:BAD_REQUEST" />
+            <mule:error-mapping sourceType="HTTP:UNAUTHORIZED" targetType="STUDENTAPI:UNAUTHORIZED" />
+            <mule:error-mapping sourceType="HTTP:FORBIDDEN" targetType="STUDENTAPI:FORBIDDEN" />
+            <mule:error-mapping sourceType="HTTP:METHOD_NOT_ALLOWED" targetType="STUDENTAPI:METHOD_NOT_ALLOWED" />
+            <mule:error-mapping sourceType="HTTP:NOT_FOUND" targetType="STUDENTAPI:NOT_FOUND" />
+            <mule:error-mapping sourceType="HTTP:NOT_ACCEPTABLE" targetType="STUDENTAPI:NOT_ACCEPTABLE" />
+            <mule:error-mapping sourceType="HTTP:UNSUPPORTED_MEDIA_TYPE" targetType="STUDENTAPI:UNSUPPORTED_MEDIA_TYPE" />
+            <mule:error-mapping sourceType="HTTP:TOO_MANY_REQUESTS" targetType="STUDENTAPI:TOO_MANY_REQUESTS" />
+            <mule:error-mapping sourceType="HTTP:INTERNAL_SERVER_ERROR" targetType="STUDENTAPI:INTERNAL_SERVER_ERROR" />
+            <mule:error-mapping sourceType="HTTP:SERVICE_UNAVAILABLE" targetType="STUDENTAPI:SERVICE_UNAVAILABLE" />
+            <mule:error-mapping sourceType="HTTP:RETRY_EXHAUSTED" targetType="STUDENTAPI:RETRY_EXHAUSTED" />
+        
+            <http:headers>
+            <![CDATA[#[ { 'Accept': 'application/json' } filterObject $ != null ]]]>
+        </http:headers>
+                <http:uri-params>
+            <![CDATA[#[ { 'ID': vars['id'] } filterObject $ != null ]]]>
+        </http:uri-params>
+        </http:request>
+    <mule:set-payload value="#[payload]" mimeType="application/json" />
+        </body>
+                    <output type="string" />
+                <output-attributes type="java::org.mule.extension.http.api.HttpResponseAttributes" />
+
+        <errors>
+                            <error type="PARSING"/>
+                            <error type="TIMEOUT"/>
+                            <error type="SECURITY"/>
+                            <error type="CONNECTIVITY"/>
+                            <error type="BAD_REQUEST"/>
+                            <error type="UNAUTHORIZED"/>
+                            <error type="FORBIDDEN"/>
+                            <error type="METHOD_NOT_ALLOWED"/>
+                            <error type="NOT_FOUND"/>
+                            <error type="NOT_ACCEPTABLE"/>
+                            <error type="UNSUPPORTED_MEDIA_TYPE"/>
+                            <error type="TOO_MANY_REQUESTS"/>
+                            <error type="INTERNAL_SERVER_ERROR"/>
+                            <error type="SERVICE_UNAVAILABLE"/>
+                            <error type="RETRY_EXHAUSTED"/>
+                    </errors>
+    </operation>
+    <operation name="get-study-programs"  >
+        <parameters>
+                                                <parameter name="request-streaming-mode" displayName="Request streaming mode" type="request-streaming-mode-enum" use="OPTIONAL" tab="Advanced" />
+        </parameters>
+        <body>
+                <http:request config-ref="studentapi-httpreq-config"
+              path="/studyProgram"
+              method="GET"
+              requestStreamingMode='#[vars["request-streaming-mode"]]'
+>
+                <mule:error-mapping sourceType="HTTP:PARSING" targetType="STUDENTAPI:PARSING" />
+            <mule:error-mapping sourceType="HTTP:TIMEOUT" targetType="STUDENTAPI:TIMEOUT" />
+            <mule:error-mapping sourceType="HTTP:SECURITY" targetType="STUDENTAPI:SECURITY" />
+            <mule:error-mapping sourceType="HTTP:CONNECTIVITY" targetType="STUDENTAPI:CONNECTIVITY" />
+            <mule:error-mapping sourceType="HTTP:BAD_REQUEST" targetType="STUDENTAPI:BAD_REQUEST" />
+            <mule:error-mapping sourceType="HTTP:UNAUTHORIZED" targetType="STUDENTAPI:UNAUTHORIZED" />
+            <mule:error-mapping sourceType="HTTP:FORBIDDEN" targetType="STUDENTAPI:FORBIDDEN" />
+            <mule:error-mapping sourceType="HTTP:METHOD_NOT_ALLOWED" targetType="STUDENTAPI:METHOD_NOT_ALLOWED" />
+            <mule:error-mapping sourceType="HTTP:NOT_FOUND" targetType="STUDENTAPI:NOT_FOUND" />
+            <mule:error-mapping sourceType="HTTP:NOT_ACCEPTABLE" targetType="STUDENTAPI:NOT_ACCEPTABLE" />
+            <mule:error-mapping sourceType="HTTP:UNSUPPORTED_MEDIA_TYPE" targetType="STUDENTAPI:UNSUPPORTED_MEDIA_TYPE" />
+            <mule:error-mapping sourceType="HTTP:TOO_MANY_REQUESTS" targetType="STUDENTAPI:TOO_MANY_REQUESTS" />
+            <mule:error-mapping sourceType="HTTP:INTERNAL_SERVER_ERROR" targetType="STUDENTAPI:INTERNAL_SERVER_ERROR" />
+            <mule:error-mapping sourceType="HTTP:SERVICE_UNAVAILABLE" targetType="STUDENTAPI:SERVICE_UNAVAILABLE" />
+            <mule:error-mapping sourceType="HTTP:RETRY_EXHAUSTED" targetType="STUDENTAPI:RETRY_EXHAUSTED" />
+        
+            <http:headers>
+            <![CDATA[#[ { 'Accept': 'application/json' } filterObject $ != null ]]]>
+        </http:headers>
+            </http:request>
+    <mule:set-payload value="#[payload]" mimeType="application/json" />
+        </body>
+                    <output type="get-study-programs-response-type" />
+                <output-attributes type="java::org.mule.extension.http.api.HttpResponseAttributes" />
+
+        <errors>
+                            <error type="PARSING"/>
+                            <error type="TIMEOUT"/>
+                            <error type="SECURITY"/>
+                            <error type="CONNECTIVITY"/>
+                            <error type="BAD_REQUEST"/>
+                            <error type="UNAUTHORIZED"/>
+                            <error type="FORBIDDEN"/>
+                            <error type="METHOD_NOT_ALLOWED"/>
+                            <error type="NOT_FOUND"/>
+                            <error type="NOT_ACCEPTABLE"/>
+                            <error type="UNSUPPORTED_MEDIA_TYPE"/>
+                            <error type="TOO_MANY_REQUESTS"/>
+                            <error type="INTERNAL_SERVER_ERROR"/>
+                            <error type="SERVICE_UNAVAILABLE"/>
+                            <error type="RETRY_EXHAUSTED"/>
+                    </errors>
+    </operation>
+    <operation name="create-study-program"  >
+        <parameters>
+                            <parameter name="create-study-program-request-data" type="create-study-program-request-type" use="REQUIRED" role="PRIMARY" />
+                                                <parameter name="request-streaming-mode" displayName="Request streaming mode" type="request-streaming-mode-enum" use="OPTIONAL" tab="Advanced" />
+        </parameters>
+        <body>
+                <http:request config-ref="studentapi-httpreq-config"
+              path="/studyProgram"
+              method="POST"
+              requestStreamingMode='#[vars["request-streaming-mode"]]'
+>
+                <mule:error-mapping sourceType="HTTP:PARSING" targetType="STUDENTAPI:PARSING" />
+            <mule:error-mapping sourceType="HTTP:TIMEOUT" targetType="STUDENTAPI:TIMEOUT" />
+            <mule:error-mapping sourceType="HTTP:SECURITY" targetType="STUDENTAPI:SECURITY" />
+            <mule:error-mapping sourceType="HTTP:CONNECTIVITY" targetType="STUDENTAPI:CONNECTIVITY" />
+            <mule:error-mapping sourceType="HTTP:BAD_REQUEST" targetType="STUDENTAPI:BAD_REQUEST" />
+            <mule:error-mapping sourceType="HTTP:UNAUTHORIZED" targetType="STUDENTAPI:UNAUTHORIZED" />
+            <mule:error-mapping sourceType="HTTP:FORBIDDEN" targetType="STUDENTAPI:FORBIDDEN" />
+            <mule:error-mapping sourceType="HTTP:METHOD_NOT_ALLOWED" targetType="STUDENTAPI:METHOD_NOT_ALLOWED" />
+            <mule:error-mapping sourceType="HTTP:NOT_FOUND" targetType="STUDENTAPI:NOT_FOUND" />
+            <mule:error-mapping sourceType="HTTP:NOT_ACCEPTABLE" targetType="STUDENTAPI:NOT_ACCEPTABLE" />
+            <mule:error-mapping sourceType="HTTP:UNSUPPORTED_MEDIA_TYPE" targetType="STUDENTAPI:UNSUPPORTED_MEDIA_TYPE" />
+            <mule:error-mapping sourceType="HTTP:TOO_MANY_REQUESTS" targetType="STUDENTAPI:TOO_MANY_REQUESTS" />
+            <mule:error-mapping sourceType="HTTP:INTERNAL_SERVER_ERROR" targetType="STUDENTAPI:INTERNAL_SERVER_ERROR" />
+            <mule:error-mapping sourceType="HTTP:SERVICE_UNAVAILABLE" targetType="STUDENTAPI:SERVICE_UNAVAILABLE" />
+            <mule:error-mapping sourceType="HTTP:RETRY_EXHAUSTED" targetType="STUDENTAPI:RETRY_EXHAUSTED" />
+                <http:body>
+            <![CDATA[#[output application/json --- vars['create-study-program-request-data']]
+]]>
+        </http:body>
+    
+            <http:headers>
+            <![CDATA[#[ { 'Accept': 'application/json' } filterObject $ != null ]]]>
+        </http:headers>
+            </http:request>
+    <mule:set-payload value="#[payload]" mimeType="application/json" />
+        </body>
+                    <output type="string" />
+                <output-attributes type="java::org.mule.extension.http.api.HttpResponseAttributes" />
+
+        <errors>
+                            <error type="PARSING"/>
+                            <error type="TIMEOUT"/>
+                            <error type="SECURITY"/>
+                            <error type="CONNECTIVITY"/>
+                            <error type="BAD_REQUEST"/>
+                            <error type="UNAUTHORIZED"/>
+                            <error type="FORBIDDEN"/>
+                            <error type="METHOD_NOT_ALLOWED"/>
+                            <error type="NOT_FOUND"/>
+                            <error type="NOT_ACCEPTABLE"/>
+                            <error type="UNSUPPORTED_MEDIA_TYPE"/>
+                            <error type="TOO_MANY_REQUESTS"/>
+                            <error type="INTERNAL_SERVER_ERROR"/>
+                            <error type="SERVICE_UNAVAILABLE"/>
+                            <error type="RETRY_EXHAUSTED"/>
+                    </errors>
+    </operation>
+    <operation name="get-study-program-by-id"  >
+        <parameters>
+                                        <parameter name="id"
+                                        type="string"
+                                        use="REQUIRED"                    />
+                                    <parameter name="request-streaming-mode" displayName="Request streaming mode" type="request-streaming-mode-enum" use="OPTIONAL" tab="Advanced" />
+        </parameters>
+        <body>
+                <http:request config-ref="studentapi-httpreq-config"
+              path="/studyProgram/{ID}"
+              method="GET"
+              requestStreamingMode='#[vars["request-streaming-mode"]]'
+>
+                <mule:error-mapping sourceType="HTTP:PARSING" targetType="STUDENTAPI:PARSING" />
+            <mule:error-mapping sourceType="HTTP:TIMEOUT" targetType="STUDENTAPI:TIMEOUT" />
+            <mule:error-mapping sourceType="HTTP:SECURITY" targetType="STUDENTAPI:SECURITY" />
+            <mule:error-mapping sourceType="HTTP:CONNECTIVITY" targetType="STUDENTAPI:CONNECTIVITY" />
+            <mule:error-mapping sourceType="HTTP:BAD_REQUEST" targetType="STUDENTAPI:BAD_REQUEST" />
+            <mule:error-mapping sourceType="HTTP:UNAUTHORIZED" targetType="STUDENTAPI:UNAUTHORIZED" />
+            <mule:error-mapping sourceType="HTTP:FORBIDDEN" targetType="STUDENTAPI:FORBIDDEN" />
+            <mule:error-mapping sourceType="HTTP:METHOD_NOT_ALLOWED" targetType="STUDENTAPI:METHOD_NOT_ALLOWED" />
+            <mule:error-mapping sourceType="HTTP:NOT_FOUND" targetType="STUDENTAPI:NOT_FOUND" />
+            <mule:error-mapping sourceType="HTTP:NOT_ACCEPTABLE" targetType="STUDENTAPI:NOT_ACCEPTABLE" />
+            <mule:error-mapping sourceType="HTTP:UNSUPPORTED_MEDIA_TYPE" targetType="STUDENTAPI:UNSUPPORTED_MEDIA_TYPE" />
+            <mule:error-mapping sourceType="HTTP:TOO_MANY_REQUESTS" targetType="STUDENTAPI:TOO_MANY_REQUESTS" />
+            <mule:error-mapping sourceType="HTTP:INTERNAL_SERVER_ERROR" targetType="STUDENTAPI:INTERNAL_SERVER_ERROR" />
+            <mule:error-mapping sourceType="HTTP:SERVICE_UNAVAILABLE" targetType="STUDENTAPI:SERVICE_UNAVAILABLE" />
+            <mule:error-mapping sourceType="HTTP:RETRY_EXHAUSTED" targetType="STUDENTAPI:RETRY_EXHAUSTED" />
+        
+            <http:headers>
+            <![CDATA[#[ { 'Accept': 'application/json' } filterObject $ != null ]]]>
+        </http:headers>
+                <http:uri-params>
+            <![CDATA[#[ { 'ID': vars['id'] } filterObject $ != null ]]]>
+        </http:uri-params>
+        </http:request>
+    <mule:set-payload value="#[payload]" mimeType="application/json" />
+        </body>
+                    <output type="get-study-program-by-id-response-type" />
+                <output-attributes type="java::org.mule.extension.http.api.HttpResponseAttributes" />
+
+        <errors>
+                            <error type="PARSING"/>
+                            <error type="TIMEOUT"/>
+                            <error type="SECURITY"/>
+                            <error type="CONNECTIVITY"/>
+                            <error type="BAD_REQUEST"/>
+                            <error type="UNAUTHORIZED"/>
+                            <error type="FORBIDDEN"/>
+                            <error type="METHOD_NOT_ALLOWED"/>
+                            <error type="NOT_FOUND"/>
+                            <error type="NOT_ACCEPTABLE"/>
+                            <error type="UNSUPPORTED_MEDIA_TYPE"/>
+                            <error type="TOO_MANY_REQUESTS"/>
+                            <error type="INTERNAL_SERVER_ERROR"/>
+                            <error type="SERVICE_UNAVAILABLE"/>
+                            <error type="RETRY_EXHAUSTED"/>
+                    </errors>
+    </operation>
+    <operation name="update-study-program-by-id"  >
+        <parameters>
+                            <parameter name="update-study-program-by-id-request-data" type="update-study-program-by-id-request-type" use="REQUIRED" role="PRIMARY" />
+                                        <parameter name="id"
+                                        type="string"
+                                        use="REQUIRED"                    />
+                                    <parameter name="request-streaming-mode" displayName="Request streaming mode" type="request-streaming-mode-enum" use="OPTIONAL" tab="Advanced" />
+        </parameters>
+        <body>
+                <http:request config-ref="studentapi-httpreq-config"
+              path="/studyProgram/{ID}"
+              method="PUT"
+              requestStreamingMode='#[vars["request-streaming-mode"]]'
+>
+                <mule:error-mapping sourceType="HTTP:PARSING" targetType="STUDENTAPI:PARSING" />
+            <mule:error-mapping sourceType="HTTP:TIMEOUT" targetType="STUDENTAPI:TIMEOUT" />
+            <mule:error-mapping sourceType="HTTP:SECURITY" targetType="STUDENTAPI:SECURITY" />
+            <mule:error-mapping sourceType="HTTP:CONNECTIVITY" targetType="STUDENTAPI:CONNECTIVITY" />
+            <mule:error-mapping sourceType="HTTP:BAD_REQUEST" targetType="STUDENTAPI:BAD_REQUEST" />
+            <mule:error-mapping sourceType="HTTP:UNAUTHORIZED" targetType="STUDENTAPI:UNAUTHORIZED" />
+            <mule:error-mapping sourceType="HTTP:FORBIDDEN" targetType="STUDENTAPI:FORBIDDEN" />
+            <mule:error-mapping sourceType="HTTP:METHOD_NOT_ALLOWED" targetType="STUDENTAPI:METHOD_NOT_ALLOWED" />
+            <mule:error-mapping sourceType="HTTP:NOT_FOUND" targetType="STUDENTAPI:NOT_FOUND" />
+            <mule:error-mapping sourceType="HTTP:NOT_ACCEPTABLE" targetType="STUDENTAPI:NOT_ACCEPTABLE" />
+            <mule:error-mapping sourceType="HTTP:UNSUPPORTED_MEDIA_TYPE" targetType="STUDENTAPI:UNSUPPORTED_MEDIA_TYPE" />
+            <mule:error-mapping sourceType="HTTP:TOO_MANY_REQUESTS" targetType="STUDENTAPI:TOO_MANY_REQUESTS" />
+            <mule:error-mapping sourceType="HTTP:INTERNAL_SERVER_ERROR" targetType="STUDENTAPI:INTERNAL_SERVER_ERROR" />
+            <mule:error-mapping sourceType="HTTP:SERVICE_UNAVAILABLE" targetType="STUDENTAPI:SERVICE_UNAVAILABLE" />
+            <mule:error-mapping sourceType="HTTP:RETRY_EXHAUSTED" targetType="STUDENTAPI:RETRY_EXHAUSTED" />
+                <http:body>
+            <![CDATA[#[output application/json --- vars['update-study-program-by-id-request-data']]
+]]>
+        </http:body>
+    
+            <http:headers>
+            <![CDATA[#[ { 'Accept': 'application/json' } filterObject $ != null ]]]>
+        </http:headers>
+                <http:uri-params>
+            <![CDATA[#[ { 'ID': vars['id'] } filterObject $ != null ]]]>
+        </http:uri-params>
+        </http:request>
+    <mule:set-payload value="#[payload]" mimeType="application/json" />
+        </body>
+                    <output type="string" />
+                <output-attributes type="java::org.mule.extension.http.api.HttpResponseAttributes" />
+
+        <errors>
+                            <error type="PARSING"/>
+                            <error type="TIMEOUT"/>
+                            <error type="SECURITY"/>
+                            <error type="CONNECTIVITY"/>
+                            <error type="BAD_REQUEST"/>
+                            <error type="UNAUTHORIZED"/>
+                            <error type="FORBIDDEN"/>
+                            <error type="METHOD_NOT_ALLOWED"/>
+                            <error type="NOT_FOUND"/>
+                            <error type="NOT_ACCEPTABLE"/>
+                            <error type="UNSUPPORTED_MEDIA_TYPE"/>
+                            <error type="TOO_MANY_REQUESTS"/>
+                            <error type="INTERNAL_SERVER_ERROR"/>
+                            <error type="SERVICE_UNAVAILABLE"/>
+                            <error type="RETRY_EXHAUSTED"/>
+                    </errors>
+    </operation>
+    <operation name="delete-study-program-by-id"  >
+        <parameters>
+                                        <parameter name="id"
+                                        type="string"
+                                        use="REQUIRED"                    />
+                                    <parameter name="request-streaming-mode" displayName="Request streaming mode" type="request-streaming-mode-enum" use="OPTIONAL" tab="Advanced" />
+        </parameters>
+        <body>
+                <http:request config-ref="studentapi-httpreq-config"
+              path="/studyProgram/{ID}"
+              method="DELETE"
+              requestStreamingMode='#[vars["request-streaming-mode"]]'
+>
+                <mule:error-mapping sourceType="HTTP:PARSING" targetType="STUDENTAPI:PARSING" />
+            <mule:error-mapping sourceType="HTTP:TIMEOUT" targetType="STUDENTAPI:TIMEOUT" />
+            <mule:error-mapping sourceType="HTTP:SECURITY" targetType="STUDENTAPI:SECURITY" />
+            <mule:error-mapping sourceType="HTTP:CONNECTIVITY" targetType="STUDENTAPI:CONNECTIVITY" />
+            <mule:error-mapping sourceType="HTTP:BAD_REQUEST" targetType="STUDENTAPI:BAD_REQUEST" />
+            <mule:error-mapping sourceType="HTTP:UNAUTHORIZED" targetType="STUDENTAPI:UNAUTHORIZED" />
+            <mule:error-mapping sourceType="HTTP:FORBIDDEN" targetType="STUDENTAPI:FORBIDDEN" />
+            <mule:error-mapping sourceType="HTTP:METHOD_NOT_ALLOWED" targetType="STUDENTAPI:METHOD_NOT_ALLOWED" />
+            <mule:error-mapping sourceType="HTTP:NOT_FOUND" targetType="STUDENTAPI:NOT_FOUND" />
+            <mule:error-mapping sourceType="HTTP:NOT_ACCEPTABLE" targetType="STUDENTAPI:NOT_ACCEPTABLE" />
+            <mule:error-mapping sourceType="HTTP:UNSUPPORTED_MEDIA_TYPE" targetType="STUDENTAPI:UNSUPPORTED_MEDIA_TYPE" />
+            <mule:error-mapping sourceType="HTTP:TOO_MANY_REQUESTS" targetType="STUDENTAPI:TOO_MANY_REQUESTS" />
+            <mule:error-mapping sourceType="HTTP:INTERNAL_SERVER_ERROR" targetType="STUDENTAPI:INTERNAL_SERVER_ERROR" />
+            <mule:error-mapping sourceType="HTTP:SERVICE_UNAVAILABLE" targetType="STUDENTAPI:SERVICE_UNAVAILABLE" />
+            <mule:error-mapping sourceType="HTTP:RETRY_EXHAUSTED" targetType="STUDENTAPI:RETRY_EXHAUSTED" />
+        
+            <http:headers>
+            <![CDATA[#[ { 'Accept': 'application/json' } filterObject $ != null ]]]>
+        </http:headers>
+                <http:uri-params>
+            <![CDATA[#[ { 'ID': vars['id'] } filterObject $ != null ]]]>
+        </http:uri-params>
+        </http:request>
+    <mule:set-payload value="#[payload]" mimeType="application/json" />
+        </body>
+                    <output type="string" />
+                <output-attributes type="java::org.mule.extension.http.api.HttpResponseAttributes" />
+
+        <errors>
+                            <error type="PARSING"/>
+                            <error type="TIMEOUT"/>
+                            <error type="SECURITY"/>
+                            <error type="CONNECTIVITY"/>
+                            <error type="BAD_REQUEST"/>
+                            <error type="UNAUTHORIZED"/>
+                            <error type="FORBIDDEN"/>
+                            <error type="METHOD_NOT_ALLOWED"/>
+                            <error type="NOT_FOUND"/>
+                            <error type="NOT_ACCEPTABLE"/>
+                            <error type="UNSUPPORTED_MEDIA_TYPE"/>
+                            <error type="TOO_MANY_REQUESTS"/>
+                            <error type="INTERNAL_SERVER_ERROR"/>
+                            <error type="SERVICE_UNAVAILABLE"/>
+                            <error type="RETRY_EXHAUSTED"/>
+                    </errors>
+    </operation>
+    <operation name="get-subjects"  >
+        <parameters>
+                                                <parameter name="request-streaming-mode" displayName="Request streaming mode" type="request-streaming-mode-enum" use="OPTIONAL" tab="Advanced" />
+        </parameters>
+        <body>
+                <http:request config-ref="studentapi-httpreq-config"
+              path="/subject"
+              method="GET"
+              requestStreamingMode='#[vars["request-streaming-mode"]]'
+>
+                <mule:error-mapping sourceType="HTTP:PARSING" targetType="STUDENTAPI:PARSING" />
+            <mule:error-mapping sourceType="HTTP:TIMEOUT" targetType="STUDENTAPI:TIMEOUT" />
+            <mule:error-mapping sourceType="HTTP:SECURITY" targetType="STUDENTAPI:SECURITY" />
+            <mule:error-mapping sourceType="HTTP:CONNECTIVITY" targetType="STUDENTAPI:CONNECTIVITY" />
+            <mule:error-mapping sourceType="HTTP:BAD_REQUEST" targetType="STUDENTAPI:BAD_REQUEST" />
+            <mule:error-mapping sourceType="HTTP:UNAUTHORIZED" targetType="STUDENTAPI:UNAUTHORIZED" />
+            <mule:error-mapping sourceType="HTTP:FORBIDDEN" targetType="STUDENTAPI:FORBIDDEN" />
+            <mule:error-mapping sourceType="HTTP:METHOD_NOT_ALLOWED" targetType="STUDENTAPI:METHOD_NOT_ALLOWED" />
+            <mule:error-mapping sourceType="HTTP:NOT_FOUND" targetType="STUDENTAPI:NOT_FOUND" />
+            <mule:error-mapping sourceType="HTTP:NOT_ACCEPTABLE" targetType="STUDENTAPI:NOT_ACCEPTABLE" />
+            <mule:error-mapping sourceType="HTTP:UNSUPPORTED_MEDIA_TYPE" targetType="STUDENTAPI:UNSUPPORTED_MEDIA_TYPE" />
+            <mule:error-mapping sourceType="HTTP:TOO_MANY_REQUESTS" targetType="STUDENTAPI:TOO_MANY_REQUESTS" />
+            <mule:error-mapping sourceType="HTTP:INTERNAL_SERVER_ERROR" targetType="STUDENTAPI:INTERNAL_SERVER_ERROR" />
+            <mule:error-mapping sourceType="HTTP:SERVICE_UNAVAILABLE" targetType="STUDENTAPI:SERVICE_UNAVAILABLE" />
+            <mule:error-mapping sourceType="HTTP:RETRY_EXHAUSTED" targetType="STUDENTAPI:RETRY_EXHAUSTED" />
+        
+            <http:headers>
+            <![CDATA[#[ { 'Accept': 'application/json' } filterObject $ != null ]]]>
+        </http:headers>
+            </http:request>
+    <mule:set-payload value="#[payload]" mimeType="application/json" />
+        </body>
+                    <output type="get-subjects-response-type" />
+                <output-attributes type="java::org.mule.extension.http.api.HttpResponseAttributes" />
+
+        <errors>
+                            <error type="PARSING"/>
+                            <error type="TIMEOUT"/>
+                            <error type="SECURITY"/>
+                            <error type="CONNECTIVITY"/>
+                            <error type="BAD_REQUEST"/>
+                            <error type="UNAUTHORIZED"/>
+                            <error type="FORBIDDEN"/>
+                            <error type="METHOD_NOT_ALLOWED"/>
+                            <error type="NOT_FOUND"/>
+                            <error type="NOT_ACCEPTABLE"/>
+                            <error type="UNSUPPORTED_MEDIA_TYPE"/>
+                            <error type="TOO_MANY_REQUESTS"/>
+                            <error type="INTERNAL_SERVER_ERROR"/>
+                            <error type="SERVICE_UNAVAILABLE"/>
+                            <error type="RETRY_EXHAUSTED"/>
+                    </errors>
+    </operation>
+    <operation name="create-subject"  >
+        <parameters>
+                            <parameter name="create-subject-request-data" type="create-subject-request-type" use="REQUIRED" role="PRIMARY" />
+                                                <parameter name="request-streaming-mode" displayName="Request streaming mode" type="request-streaming-mode-enum" use="OPTIONAL" tab="Advanced" />
+        </parameters>
+        <body>
+                <http:request config-ref="studentapi-httpreq-config"
+              path="/subject"
+              method="POST"
+              requestStreamingMode='#[vars["request-streaming-mode"]]'
+>
+                <mule:error-mapping sourceType="HTTP:PARSING" targetType="STUDENTAPI:PARSING" />
+            <mule:error-mapping sourceType="HTTP:TIMEOUT" targetType="STUDENTAPI:TIMEOUT" />
+            <mule:error-mapping sourceType="HTTP:SECURITY" targetType="STUDENTAPI:SECURITY" />
+            <mule:error-mapping sourceType="HTTP:CONNECTIVITY" targetType="STUDENTAPI:CONNECTIVITY" />
+            <mule:error-mapping sourceType="HTTP:BAD_REQUEST" targetType="STUDENTAPI:BAD_REQUEST" />
+            <mule:error-mapping sourceType="HTTP:UNAUTHORIZED" targetType="STUDENTAPI:UNAUTHORIZED" />
+            <mule:error-mapping sourceType="HTTP:FORBIDDEN" targetType="STUDENTAPI:FORBIDDEN" />
+            <mule:error-mapping sourceType="HTTP:METHOD_NOT_ALLOWED" targetType="STUDENTAPI:METHOD_NOT_ALLOWED" />
+            <mule:error-mapping sourceType="HTTP:NOT_FOUND" targetType="STUDENTAPI:NOT_FOUND" />
+            <mule:error-mapping sourceType="HTTP:NOT_ACCEPTABLE" targetType="STUDENTAPI:NOT_ACCEPTABLE" />
+            <mule:error-mapping sourceType="HTTP:UNSUPPORTED_MEDIA_TYPE" targetType="STUDENTAPI:UNSUPPORTED_MEDIA_TYPE" />
+            <mule:error-mapping sourceType="HTTP:TOO_MANY_REQUESTS" targetType="STUDENTAPI:TOO_MANY_REQUESTS" />
+            <mule:error-mapping sourceType="HTTP:INTERNAL_SERVER_ERROR" targetType="STUDENTAPI:INTERNAL_SERVER_ERROR" />
+            <mule:error-mapping sourceType="HTTP:SERVICE_UNAVAILABLE" targetType="STUDENTAPI:SERVICE_UNAVAILABLE" />
+            <mule:error-mapping sourceType="HTTP:RETRY_EXHAUSTED" targetType="STUDENTAPI:RETRY_EXHAUSTED" />
+                <http:body>
+            <![CDATA[#[output application/json --- vars['create-subject-request-data']]
+]]>
+        </http:body>
+    
+            <http:headers>
+            <![CDATA[#[ { 'Accept': 'application/json' } filterObject $ != null ]]]>
+        </http:headers>
+            </http:request>
+    <mule:set-payload value="#[payload]" mimeType="application/json" />
+        </body>
+                    <output type="string" />
+                <output-attributes type="java::org.mule.extension.http.api.HttpResponseAttributes" />
+
+        <errors>
+                            <error type="PARSING"/>
+                            <error type="TIMEOUT"/>
+                            <error type="SECURITY"/>
+                            <error type="CONNECTIVITY"/>
+                            <error type="BAD_REQUEST"/>
+                            <error type="UNAUTHORIZED"/>
+                            <error type="FORBIDDEN"/>
+                            <error type="METHOD_NOT_ALLOWED"/>
+                            <error type="NOT_FOUND"/>
+                            <error type="NOT_ACCEPTABLE"/>
+                            <error type="UNSUPPORTED_MEDIA_TYPE"/>
+                            <error type="TOO_MANY_REQUESTS"/>
+                            <error type="INTERNAL_SERVER_ERROR"/>
+                            <error type="SERVICE_UNAVAILABLE"/>
+                            <error type="RETRY_EXHAUSTED"/>
+                    </errors>
+    </operation>
+    <operation name="get-subject-by-id"  >
+        <parameters>
+                                        <parameter name="id"
+                                        type="string"
+                                        use="REQUIRED"                    />
+                                    <parameter name="request-streaming-mode" displayName="Request streaming mode" type="request-streaming-mode-enum" use="OPTIONAL" tab="Advanced" />
+        </parameters>
+        <body>
+                <http:request config-ref="studentapi-httpreq-config"
+              path="/subject/{ID}"
+              method="GET"
+              requestStreamingMode='#[vars["request-streaming-mode"]]'
+>
+                <mule:error-mapping sourceType="HTTP:PARSING" targetType="STUDENTAPI:PARSING" />
+            <mule:error-mapping sourceType="HTTP:TIMEOUT" targetType="STUDENTAPI:TIMEOUT" />
+            <mule:error-mapping sourceType="HTTP:SECURITY" targetType="STUDENTAPI:SECURITY" />
+            <mule:error-mapping sourceType="HTTP:CONNECTIVITY" targetType="STUDENTAPI:CONNECTIVITY" />
+            <mule:error-mapping sourceType="HTTP:BAD_REQUEST" targetType="STUDENTAPI:BAD_REQUEST" />
+            <mule:error-mapping sourceType="HTTP:UNAUTHORIZED" targetType="STUDENTAPI:UNAUTHORIZED" />
+            <mule:error-mapping sourceType="HTTP:FORBIDDEN" targetType="STUDENTAPI:FORBIDDEN" />
+            <mule:error-mapping sourceType="HTTP:METHOD_NOT_ALLOWED" targetType="STUDENTAPI:METHOD_NOT_ALLOWED" />
+            <mule:error-mapping sourceType="HTTP:NOT_FOUND" targetType="STUDENTAPI:NOT_FOUND" />
+            <mule:error-mapping sourceType="HTTP:NOT_ACCEPTABLE" targetType="STUDENTAPI:NOT_ACCEPTABLE" />
+            <mule:error-mapping sourceType="HTTP:UNSUPPORTED_MEDIA_TYPE" targetType="STUDENTAPI:UNSUPPORTED_MEDIA_TYPE" />
+            <mule:error-mapping sourceType="HTTP:TOO_MANY_REQUESTS" targetType="STUDENTAPI:TOO_MANY_REQUESTS" />
+            <mule:error-mapping sourceType="HTTP:INTERNAL_SERVER_ERROR" targetType="STUDENTAPI:INTERNAL_SERVER_ERROR" />
+            <mule:error-mapping sourceType="HTTP:SERVICE_UNAVAILABLE" targetType="STUDENTAPI:SERVICE_UNAVAILABLE" />
+            <mule:error-mapping sourceType="HTTP:RETRY_EXHAUSTED" targetType="STUDENTAPI:RETRY_EXHAUSTED" />
+        
+            <http:headers>
+            <![CDATA[#[ { 'Accept': 'application/json' } filterObject $ != null ]]]>
+        </http:headers>
+                <http:uri-params>
+            <![CDATA[#[ { 'ID': vars['id'] } filterObject $ != null ]]]>
+        </http:uri-params>
+        </http:request>
+    <mule:set-payload value="#[payload]" mimeType="application/json" />
+        </body>
+                    <output type="get-subject-by-id-response-type" />
+                <output-attributes type="java::org.mule.extension.http.api.HttpResponseAttributes" />
+
+        <errors>
+                            <error type="PARSING"/>
+                            <error type="TIMEOUT"/>
+                            <error type="SECURITY"/>
+                            <error type="CONNECTIVITY"/>
+                            <error type="BAD_REQUEST"/>
+                            <error type="UNAUTHORIZED"/>
+                            <error type="FORBIDDEN"/>
+                            <error type="METHOD_NOT_ALLOWED"/>
+                            <error type="NOT_FOUND"/>
+                            <error type="NOT_ACCEPTABLE"/>
+                            <error type="UNSUPPORTED_MEDIA_TYPE"/>
+                            <error type="TOO_MANY_REQUESTS"/>
+                            <error type="INTERNAL_SERVER_ERROR"/>
+                            <error type="SERVICE_UNAVAILABLE"/>
+                            <error type="RETRY_EXHAUSTED"/>
+                    </errors>
+    </operation>
+    <operation name="update-subject-by-id"  >
+        <parameters>
+                            <parameter name="update-subject-by-id-request-data" type="update-subject-by-id-request-type" use="REQUIRED" role="PRIMARY" />
+                                        <parameter name="id"
+                                        type="string"
+                                        use="REQUIRED"                    />
+                                    <parameter name="request-streaming-mode" displayName="Request streaming mode" type="request-streaming-mode-enum" use="OPTIONAL" tab="Advanced" />
+        </parameters>
+        <body>
+                <http:request config-ref="studentapi-httpreq-config"
+              path="/subject/{ID}"
+              method="PUT"
+              requestStreamingMode='#[vars["request-streaming-mode"]]'
+>
+                <mule:error-mapping sourceType="HTTP:PARSING" targetType="STUDENTAPI:PARSING" />
+            <mule:error-mapping sourceType="HTTP:TIMEOUT" targetType="STUDENTAPI:TIMEOUT" />
+            <mule:error-mapping sourceType="HTTP:SECURITY" targetType="STUDENTAPI:SECURITY" />
+            <mule:error-mapping sourceType="HTTP:CONNECTIVITY" targetType="STUDENTAPI:CONNECTIVITY" />
+            <mule:error-mapping sourceType="HTTP:BAD_REQUEST" targetType="STUDENTAPI:BAD_REQUEST" />
+            <mule:error-mapping sourceType="HTTP:UNAUTHORIZED" targetType="STUDENTAPI:UNAUTHORIZED" />
+            <mule:error-mapping sourceType="HTTP:FORBIDDEN" targetType="STUDENTAPI:FORBIDDEN" />
+            <mule:error-mapping sourceType="HTTP:METHOD_NOT_ALLOWED" targetType="STUDENTAPI:METHOD_NOT_ALLOWED" />
+            <mule:error-mapping sourceType="HTTP:NOT_FOUND" targetType="STUDENTAPI:NOT_FOUND" />
+            <mule:error-mapping sourceType="HTTP:NOT_ACCEPTABLE" targetType="STUDENTAPI:NOT_ACCEPTABLE" />
+            <mule:error-mapping sourceType="HTTP:UNSUPPORTED_MEDIA_TYPE" targetType="STUDENTAPI:UNSUPPORTED_MEDIA_TYPE" />
+            <mule:error-mapping sourceType="HTTP:TOO_MANY_REQUESTS" targetType="STUDENTAPI:TOO_MANY_REQUESTS" />
+            <mule:error-mapping sourceType="HTTP:INTERNAL_SERVER_ERROR" targetType="STUDENTAPI:INTERNAL_SERVER_ERROR" />
+            <mule:error-mapping sourceType="HTTP:SERVICE_UNAVAILABLE" targetType="STUDENTAPI:SERVICE_UNAVAILABLE" />
+            <mule:error-mapping sourceType="HTTP:RETRY_EXHAUSTED" targetType="STUDENTAPI:RETRY_EXHAUSTED" />
+                <http:body>
+            <![CDATA[#[output application/json --- vars['update-subject-by-id-request-data']]
+]]>
+        </http:body>
+    
+            <http:headers>
+            <![CDATA[#[ { 'Accept': 'application/json' } filterObject $ != null ]]]>
+        </http:headers>
+                <http:uri-params>
+            <![CDATA[#[ { 'ID': vars['id'] } filterObject $ != null ]]]>
+        </http:uri-params>
+        </http:request>
+    <mule:set-payload value="#[payload]" mimeType="application/json" />
+        </body>
+                    <output type="string" />
+                <output-attributes type="java::org.mule.extension.http.api.HttpResponseAttributes" />
+
+        <errors>
+                            <error type="PARSING"/>
+                            <error type="TIMEOUT"/>
+                            <error type="SECURITY"/>
+                            <error type="CONNECTIVITY"/>
+                            <error type="BAD_REQUEST"/>
+                            <error type="UNAUTHORIZED"/>
+                            <error type="FORBIDDEN"/>
+                            <error type="METHOD_NOT_ALLOWED"/>
+                            <error type="NOT_FOUND"/>
+                            <error type="NOT_ACCEPTABLE"/>
+                            <error type="UNSUPPORTED_MEDIA_TYPE"/>
+                            <error type="TOO_MANY_REQUESTS"/>
+                            <error type="INTERNAL_SERVER_ERROR"/>
+                            <error type="SERVICE_UNAVAILABLE"/>
+                            <error type="RETRY_EXHAUSTED"/>
+                    </errors>
+    </operation>
+    <operation name="delete-subject-by-id"  >
+        <parameters>
+                                        <parameter name="id"
+                                        type="string"
+                                        use="REQUIRED"                    />
+                                    <parameter name="request-streaming-mode" displayName="Request streaming mode" type="request-streaming-mode-enum" use="OPTIONAL" tab="Advanced" />
+        </parameters>
+        <body>
+                <http:request config-ref="studentapi-httpreq-config"
+              path="/subject/{ID}"
+              method="DELETE"
+              requestStreamingMode='#[vars["request-streaming-mode"]]'
+>
+                <mule:error-mapping sourceType="HTTP:PARSING" targetType="STUDENTAPI:PARSING" />
+            <mule:error-mapping sourceType="HTTP:TIMEOUT" targetType="STUDENTAPI:TIMEOUT" />
+            <mule:error-mapping sourceType="HTTP:SECURITY" targetType="STUDENTAPI:SECURITY" />
+            <mule:error-mapping sourceType="HTTP:CONNECTIVITY" targetType="STUDENTAPI:CONNECTIVITY" />
+            <mule:error-mapping sourceType="HTTP:BAD_REQUEST" targetType="STUDENTAPI:BAD_REQUEST" />
+            <mule:error-mapping sourceType="HTTP:UNAUTHORIZED" targetType="STUDENTAPI:UNAUTHORIZED" />
+            <mule:error-mapping sourceType="HTTP:FORBIDDEN" targetType="STUDENTAPI:FORBIDDEN" />
+            <mule:error-mapping sourceType="HTTP:METHOD_NOT_ALLOWED" targetType="STUDENTAPI:METHOD_NOT_ALLOWED" />
+            <mule:error-mapping sourceType="HTTP:NOT_FOUND" targetType="STUDENTAPI:NOT_FOUND" />
+            <mule:error-mapping sourceType="HTTP:NOT_ACCEPTABLE" targetType="STUDENTAPI:NOT_ACCEPTABLE" />
+            <mule:error-mapping sourceType="HTTP:UNSUPPORTED_MEDIA_TYPE" targetType="STUDENTAPI:UNSUPPORTED_MEDIA_TYPE" />
+            <mule:error-mapping sourceType="HTTP:TOO_MANY_REQUESTS" targetType="STUDENTAPI:TOO_MANY_REQUESTS" />
+            <mule:error-mapping sourceType="HTTP:INTERNAL_SERVER_ERROR" targetType="STUDENTAPI:INTERNAL_SERVER_ERROR" />
+            <mule:error-mapping sourceType="HTTP:SERVICE_UNAVAILABLE" targetType="STUDENTAPI:SERVICE_UNAVAILABLE" />
+            <mule:error-mapping sourceType="HTTP:RETRY_EXHAUSTED" targetType="STUDENTAPI:RETRY_EXHAUSTED" />
+        
+            <http:headers>
+            <![CDATA[#[ { 'Accept': 'application/json' } filterObject $ != null ]]]>
+        </http:headers>
+                <http:uri-params>
+            <![CDATA[#[ { 'ID': vars['id'] } filterObject $ != null ]]]>
+        </http:uri-params>
+        </http:request>
+    <mule:set-payload value="#[payload]" mimeType="application/json" />
+        </body>
+                    <output type="string" />
+                <output-attributes type="java::org.mule.extension.http.api.HttpResponseAttributes" />
+
+        <errors>
+                            <error type="PARSING"/>
+                            <error type="TIMEOUT"/>
+                            <error type="SECURITY"/>
+                            <error type="CONNECTIVITY"/>
+                            <error type="BAD_REQUEST"/>
+                            <error type="UNAUTHORIZED"/>
+                            <error type="FORBIDDEN"/>
+                            <error type="METHOD_NOT_ALLOWED"/>
+                            <error type="NOT_FOUND"/>
+                            <error type="NOT_ACCEPTABLE"/>
+                            <error type="UNSUPPORTED_MEDIA_TYPE"/>
+                            <error type="TOO_MANY_REQUESTS"/>
+                            <error type="INTERNAL_SERVER_ERROR"/>
+                            <error type="SERVICE_UNAVAILABLE"/>
+                            <error type="RETRY_EXHAUSTED"/>
+                    </errors>
+    </operation>
+    <operation name="get-exams"  >
+        <parameters>
+                                                <parameter name="request-streaming-mode" displayName="Request streaming mode" type="request-streaming-mode-enum" use="OPTIONAL" tab="Advanced" />
+        </parameters>
+        <body>
+                <http:request config-ref="studentapi-httpreq-config"
+              path="/exam"
+              method="GET"
+              requestStreamingMode='#[vars["request-streaming-mode"]]'
+>
+                <mule:error-mapping sourceType="HTTP:PARSING" targetType="STUDENTAPI:PARSING" />
+            <mule:error-mapping sourceType="HTTP:TIMEOUT" targetType="STUDENTAPI:TIMEOUT" />
+            <mule:error-mapping sourceType="HTTP:SECURITY" targetType="STUDENTAPI:SECURITY" />
+            <mule:error-mapping sourceType="HTTP:CONNECTIVITY" targetType="STUDENTAPI:CONNECTIVITY" />
+            <mule:error-mapping sourceType="HTTP:BAD_REQUEST" targetType="STUDENTAPI:BAD_REQUEST" />
+            <mule:error-mapping sourceType="HTTP:UNAUTHORIZED" targetType="STUDENTAPI:UNAUTHORIZED" />
+            <mule:error-mapping sourceType="HTTP:FORBIDDEN" targetType="STUDENTAPI:FORBIDDEN" />
+            <mule:error-mapping sourceType="HTTP:METHOD_NOT_ALLOWED" targetType="STUDENTAPI:METHOD_NOT_ALLOWED" />
+            <mule:error-mapping sourceType="HTTP:NOT_FOUND" targetType="STUDENTAPI:NOT_FOUND" />
+            <mule:error-mapping sourceType="HTTP:NOT_ACCEPTABLE" targetType="STUDENTAPI:NOT_ACCEPTABLE" />
+            <mule:error-mapping sourceType="HTTP:UNSUPPORTED_MEDIA_TYPE" targetType="STUDENTAPI:UNSUPPORTED_MEDIA_TYPE" />
+            <mule:error-mapping sourceType="HTTP:TOO_MANY_REQUESTS" targetType="STUDENTAPI:TOO_MANY_REQUESTS" />
+            <mule:error-mapping sourceType="HTTP:INTERNAL_SERVER_ERROR" targetType="STUDENTAPI:INTERNAL_SERVER_ERROR" />
+            <mule:error-mapping sourceType="HTTP:SERVICE_UNAVAILABLE" targetType="STUDENTAPI:SERVICE_UNAVAILABLE" />
+            <mule:error-mapping sourceType="HTTP:RETRY_EXHAUSTED" targetType="STUDENTAPI:RETRY_EXHAUSTED" />
+        
+            <http:headers>
+            <![CDATA[#[ { 'Accept': 'application/json' } filterObject $ != null ]]]>
+        </http:headers>
+            </http:request>
+    <mule:set-payload value="#[payload]" mimeType="application/json" />
+        </body>
+                    <output type="get-exams-response-type" />
+                <output-attributes type="java::org.mule.extension.http.api.HttpResponseAttributes" />
+
+        <errors>
+                            <error type="PARSING"/>
+                            <error type="TIMEOUT"/>
+                            <error type="SECURITY"/>
+                            <error type="CONNECTIVITY"/>
+                            <error type="BAD_REQUEST"/>
+                            <error type="UNAUTHORIZED"/>
+                            <error type="FORBIDDEN"/>
+                            <error type="METHOD_NOT_ALLOWED"/>
+                            <error type="NOT_FOUND"/>
+                            <error type="NOT_ACCEPTABLE"/>
+                            <error type="UNSUPPORTED_MEDIA_TYPE"/>
+                            <error type="TOO_MANY_REQUESTS"/>
+                            <error type="INTERNAL_SERVER_ERROR"/>
+                            <error type="SERVICE_UNAVAILABLE"/>
+                            <error type="RETRY_EXHAUSTED"/>
+                    </errors>
+    </operation>
+    <operation name="create-exam"  >
+        <parameters>
+                            <parameter name="create-exam-request-data" type="create-exam-request-type" use="REQUIRED" role="PRIMARY" />
+                                                <parameter name="request-streaming-mode" displayName="Request streaming mode" type="request-streaming-mode-enum" use="OPTIONAL" tab="Advanced" />
+        </parameters>
+        <body>
+                <http:request config-ref="studentapi-httpreq-config"
+              path="/exam"
+              method="POST"
+              requestStreamingMode='#[vars["request-streaming-mode"]]'
+>
+                <mule:error-mapping sourceType="HTTP:PARSING" targetType="STUDENTAPI:PARSING" />
+            <mule:error-mapping sourceType="HTTP:TIMEOUT" targetType="STUDENTAPI:TIMEOUT" />
+            <mule:error-mapping sourceType="HTTP:SECURITY" targetType="STUDENTAPI:SECURITY" />
+            <mule:error-mapping sourceType="HTTP:CONNECTIVITY" targetType="STUDENTAPI:CONNECTIVITY" />
+            <mule:error-mapping sourceType="HTTP:BAD_REQUEST" targetType="STUDENTAPI:BAD_REQUEST" />
+            <mule:error-mapping sourceType="HTTP:UNAUTHORIZED" targetType="STUDENTAPI:UNAUTHORIZED" />
+            <mule:error-mapping sourceType="HTTP:FORBIDDEN" targetType="STUDENTAPI:FORBIDDEN" />
+            <mule:error-mapping sourceType="HTTP:METHOD_NOT_ALLOWED" targetType="STUDENTAPI:METHOD_NOT_ALLOWED" />
+            <mule:error-mapping sourceType="HTTP:NOT_FOUND" targetType="STUDENTAPI:NOT_FOUND" />
+            <mule:error-mapping sourceType="HTTP:NOT_ACCEPTABLE" targetType="STUDENTAPI:NOT_ACCEPTABLE" />
+            <mule:error-mapping sourceType="HTTP:UNSUPPORTED_MEDIA_TYPE" targetType="STUDENTAPI:UNSUPPORTED_MEDIA_TYPE" />
+            <mule:error-mapping sourceType="HTTP:TOO_MANY_REQUESTS" targetType="STUDENTAPI:TOO_MANY_REQUESTS" />
+            <mule:error-mapping sourceType="HTTP:INTERNAL_SERVER_ERROR" targetType="STUDENTAPI:INTERNAL_SERVER_ERROR" />
+            <mule:error-mapping sourceType="HTTP:SERVICE_UNAVAILABLE" targetType="STUDENTAPI:SERVICE_UNAVAILABLE" />
+            <mule:error-mapping sourceType="HTTP:RETRY_EXHAUSTED" targetType="STUDENTAPI:RETRY_EXHAUSTED" />
+                <http:body>
+            <![CDATA[#[output application/json --- vars['create-exam-request-data']]
+]]>
+        </http:body>
+    
+            <http:headers>
+            <![CDATA[#[ { 'Accept': 'application/json' } filterObject $ != null ]]]>
+        </http:headers>
+            </http:request>
+    <mule:set-payload value="#[payload]" mimeType="application/json" />
+        </body>
+                    <output type="string" />
+                <output-attributes type="java::org.mule.extension.http.api.HttpResponseAttributes" />
+
+        <errors>
+                            <error type="PARSING"/>
+                            <error type="TIMEOUT"/>
+                            <error type="SECURITY"/>
+                            <error type="CONNECTIVITY"/>
+                            <error type="BAD_REQUEST"/>
+                            <error type="UNAUTHORIZED"/>
+                            <error type="FORBIDDEN"/>
+                            <error type="METHOD_NOT_ALLOWED"/>
+                            <error type="NOT_FOUND"/>
+                            <error type="NOT_ACCEPTABLE"/>
+                            <error type="UNSUPPORTED_MEDIA_TYPE"/>
+                            <error type="TOO_MANY_REQUESTS"/>
+                            <error type="INTERNAL_SERVER_ERROR"/>
+                            <error type="SERVICE_UNAVAILABLE"/>
+                            <error type="RETRY_EXHAUSTED"/>
+                    </errors>
+    </operation>
+    <operation name="get-exam-by-id"  >
+        <parameters>
+                                        <parameter name="id"
+                                        type="string"
+                                        use="REQUIRED"                    />
+                                    <parameter name="request-streaming-mode" displayName="Request streaming mode" type="request-streaming-mode-enum" use="OPTIONAL" tab="Advanced" />
+        </parameters>
+        <body>
+                <http:request config-ref="studentapi-httpreq-config"
+              path="/exam/{ID}"
+              method="GET"
+              requestStreamingMode='#[vars["request-streaming-mode"]]'
+>
+                <mule:error-mapping sourceType="HTTP:PARSING" targetType="STUDENTAPI:PARSING" />
+            <mule:error-mapping sourceType="HTTP:TIMEOUT" targetType="STUDENTAPI:TIMEOUT" />
+            <mule:error-mapping sourceType="HTTP:SECURITY" targetType="STUDENTAPI:SECURITY" />
+            <mule:error-mapping sourceType="HTTP:CONNECTIVITY" targetType="STUDENTAPI:CONNECTIVITY" />
+            <mule:error-mapping sourceType="HTTP:BAD_REQUEST" targetType="STUDENTAPI:BAD_REQUEST" />
+            <mule:error-mapping sourceType="HTTP:UNAUTHORIZED" targetType="STUDENTAPI:UNAUTHORIZED" />
+            <mule:error-mapping sourceType="HTTP:FORBIDDEN" targetType="STUDENTAPI:FORBIDDEN" />
+            <mule:error-mapping sourceType="HTTP:METHOD_NOT_ALLOWED" targetType="STUDENTAPI:METHOD_NOT_ALLOWED" />
+            <mule:error-mapping sourceType="HTTP:NOT_FOUND" targetType="STUDENTAPI:NOT_FOUND" />
+            <mule:error-mapping sourceType="HTTP:NOT_ACCEPTABLE" targetType="STUDENTAPI:NOT_ACCEPTABLE" />
+            <mule:error-mapping sourceType="HTTP:UNSUPPORTED_MEDIA_TYPE" targetType="STUDENTAPI:UNSUPPORTED_MEDIA_TYPE" />
+            <mule:error-mapping sourceType="HTTP:TOO_MANY_REQUESTS" targetType="STUDENTAPI:TOO_MANY_REQUESTS" />
+            <mule:error-mapping sourceType="HTTP:INTERNAL_SERVER_ERROR" targetType="STUDENTAPI:INTERNAL_SERVER_ERROR" />
+            <mule:error-mapping sourceType="HTTP:SERVICE_UNAVAILABLE" targetType="STUDENTAPI:SERVICE_UNAVAILABLE" />
+            <mule:error-mapping sourceType="HTTP:RETRY_EXHAUSTED" targetType="STUDENTAPI:RETRY_EXHAUSTED" />
+        
+            <http:headers>
+            <![CDATA[#[ { 'Accept': 'application/json' } filterObject $ != null ]]]>
+        </http:headers>
+                <http:uri-params>
+            <![CDATA[#[ { 'ID': vars['id'] } filterObject $ != null ]]]>
+        </http:uri-params>
+        </http:request>
+    <mule:set-payload value="#[payload]" mimeType="application/json" />
+        </body>
+                    <output type="get-exam-by-id-response-type" />
+                <output-attributes type="java::org.mule.extension.http.api.HttpResponseAttributes" />
+
+        <errors>
+                            <error type="PARSING"/>
+                            <error type="TIMEOUT"/>
+                            <error type="SECURITY"/>
+                            <error type="CONNECTIVITY"/>
+                            <error type="BAD_REQUEST"/>
+                            <error type="UNAUTHORIZED"/>
+                            <error type="FORBIDDEN"/>
+                            <error type="METHOD_NOT_ALLOWED"/>
+                            <error type="NOT_FOUND"/>
+                            <error type="NOT_ACCEPTABLE"/>
+                            <error type="UNSUPPORTED_MEDIA_TYPE"/>
+                            <error type="TOO_MANY_REQUESTS"/>
+                            <error type="INTERNAL_SERVER_ERROR"/>
+                            <error type="SERVICE_UNAVAILABLE"/>
+                            <error type="RETRY_EXHAUSTED"/>
+                    </errors>
+    </operation>
+    <operation name="update-exam-by-id"  >
+        <parameters>
+                            <parameter name="update-exam-by-id-request-data" type="update-exam-by-id-request-type" use="REQUIRED" role="PRIMARY" />
+                                        <parameter name="id"
+                                        type="string"
+                                        use="REQUIRED"                    />
+                                    <parameter name="request-streaming-mode" displayName="Request streaming mode" type="request-streaming-mode-enum" use="OPTIONAL" tab="Advanced" />
+        </parameters>
+        <body>
+                <http:request config-ref="studentapi-httpreq-config"
+              path="/exam/{ID}"
+              method="PUT"
+              requestStreamingMode='#[vars["request-streaming-mode"]]'
+>
+                <mule:error-mapping sourceType="HTTP:PARSING" targetType="STUDENTAPI:PARSING" />
+            <mule:error-mapping sourceType="HTTP:TIMEOUT" targetType="STUDENTAPI:TIMEOUT" />
+            <mule:error-mapping sourceType="HTTP:SECURITY" targetType="STUDENTAPI:SECURITY" />
+            <mule:error-mapping sourceType="HTTP:CONNECTIVITY" targetType="STUDENTAPI:CONNECTIVITY" />
+            <mule:error-mapping sourceType="HTTP:BAD_REQUEST" targetType="STUDENTAPI:BAD_REQUEST" />
+            <mule:error-mapping sourceType="HTTP:UNAUTHORIZED" targetType="STUDENTAPI:UNAUTHORIZED" />
+            <mule:error-mapping sourceType="HTTP:FORBIDDEN" targetType="STUDENTAPI:FORBIDDEN" />
+            <mule:error-mapping sourceType="HTTP:METHOD_NOT_ALLOWED" targetType="STUDENTAPI:METHOD_NOT_ALLOWED" />
+            <mule:error-mapping sourceType="HTTP:NOT_FOUND" targetType="STUDENTAPI:NOT_FOUND" />
+            <mule:error-mapping sourceType="HTTP:NOT_ACCEPTABLE" targetType="STUDENTAPI:NOT_ACCEPTABLE" />
+            <mule:error-mapping sourceType="HTTP:UNSUPPORTED_MEDIA_TYPE" targetType="STUDENTAPI:UNSUPPORTED_MEDIA_TYPE" />
+            <mule:error-mapping sourceType="HTTP:TOO_MANY_REQUESTS" targetType="STUDENTAPI:TOO_MANY_REQUESTS" />
+            <mule:error-mapping sourceType="HTTP:INTERNAL_SERVER_ERROR" targetType="STUDENTAPI:INTERNAL_SERVER_ERROR" />
+            <mule:error-mapping sourceType="HTTP:SERVICE_UNAVAILABLE" targetType="STUDENTAPI:SERVICE_UNAVAILABLE" />
+            <mule:error-mapping sourceType="HTTP:RETRY_EXHAUSTED" targetType="STUDENTAPI:RETRY_EXHAUSTED" />
+                <http:body>
+            <![CDATA[#[output application/json --- vars['update-exam-by-id-request-data']]
+]]>
+        </http:body>
+    
+            <http:headers>
+            <![CDATA[#[ { 'Accept': 'application/json' } filterObject $ != null ]]]>
+        </http:headers>
+                <http:uri-params>
+            <![CDATA[#[ { 'ID': vars['id'] } filterObject $ != null ]]]>
+        </http:uri-params>
+        </http:request>
+    <mule:set-payload value="#[payload]" mimeType="application/json" />
+        </body>
+                    <output type="string" />
+                <output-attributes type="java::org.mule.extension.http.api.HttpResponseAttributes" />
+
+        <errors>
+                            <error type="PARSING"/>
+                            <error type="TIMEOUT"/>
+                            <error type="SECURITY"/>
+                            <error type="CONNECTIVITY"/>
+                            <error type="BAD_REQUEST"/>
+                            <error type="UNAUTHORIZED"/>
+                            <error type="FORBIDDEN"/>
+                            <error type="METHOD_NOT_ALLOWED"/>
+                            <error type="NOT_FOUND"/>
+                            <error type="NOT_ACCEPTABLE"/>
+                            <error type="UNSUPPORTED_MEDIA_TYPE"/>
+                            <error type="TOO_MANY_REQUESTS"/>
+                            <error type="INTERNAL_SERVER_ERROR"/>
+                            <error type="SERVICE_UNAVAILABLE"/>
+                            <error type="RETRY_EXHAUSTED"/>
+                    </errors>
+    </operation>
+    <operation name="delete-exam-by-id"  >
+        <parameters>
+                                        <parameter name="id"
+                                        type="string"
+                                        use="REQUIRED"                    />
+                                    <parameter name="request-streaming-mode" displayName="Request streaming mode" type="request-streaming-mode-enum" use="OPTIONAL" tab="Advanced" />
+        </parameters>
+        <body>
+                <http:request config-ref="studentapi-httpreq-config"
+              path="/exam/{ID}"
+              method="DELETE"
+              requestStreamingMode='#[vars["request-streaming-mode"]]'
+>
+                <mule:error-mapping sourceType="HTTP:PARSING" targetType="STUDENTAPI:PARSING" />
+            <mule:error-mapping sourceType="HTTP:TIMEOUT" targetType="STUDENTAPI:TIMEOUT" />
+            <mule:error-mapping sourceType="HTTP:SECURITY" targetType="STUDENTAPI:SECURITY" />
+            <mule:error-mapping sourceType="HTTP:CONNECTIVITY" targetType="STUDENTAPI:CONNECTIVITY" />
+            <mule:error-mapping sourceType="HTTP:BAD_REQUEST" targetType="STUDENTAPI:BAD_REQUEST" />
+            <mule:error-mapping sourceType="HTTP:UNAUTHORIZED" targetType="STUDENTAPI:UNAUTHORIZED" />
+            <mule:error-mapping sourceType="HTTP:FORBIDDEN" targetType="STUDENTAPI:FORBIDDEN" />
+            <mule:error-mapping sourceType="HTTP:METHOD_NOT_ALLOWED" targetType="STUDENTAPI:METHOD_NOT_ALLOWED" />
+            <mule:error-mapping sourceType="HTTP:NOT_FOUND" targetType="STUDENTAPI:NOT_FOUND" />
+            <mule:error-mapping sourceType="HTTP:NOT_ACCEPTABLE" targetType="STUDENTAPI:NOT_ACCEPTABLE" />
+            <mule:error-mapping sourceType="HTTP:UNSUPPORTED_MEDIA_TYPE" targetType="STUDENTAPI:UNSUPPORTED_MEDIA_TYPE" />
+            <mule:error-mapping sourceType="HTTP:TOO_MANY_REQUESTS" targetType="STUDENTAPI:TOO_MANY_REQUESTS" />
+            <mule:error-mapping sourceType="HTTP:INTERNAL_SERVER_ERROR" targetType="STUDENTAPI:INTERNAL_SERVER_ERROR" />
+            <mule:error-mapping sourceType="HTTP:SERVICE_UNAVAILABLE" targetType="STUDENTAPI:SERVICE_UNAVAILABLE" />
+            <mule:error-mapping sourceType="HTTP:RETRY_EXHAUSTED" targetType="STUDENTAPI:RETRY_EXHAUSTED" />
+        
+            <http:headers>
+            <![CDATA[#[ { 'Accept': 'application/json' } filterObject $ != null ]]]>
+        </http:headers>
+                <http:uri-params>
+            <![CDATA[#[ { 'ID': vars['id'] } filterObject $ != null ]]]>
+        </http:uri-params>
+        </http:request>
+    <mule:set-payload value="#[payload]" mimeType="application/json" />
+        </body>
+                    <output type="string" />
+                <output-attributes type="java::org.mule.extension.http.api.HttpResponseAttributes" />
+
+        <errors>
+                            <error type="PARSING"/>
+                            <error type="TIMEOUT"/>
+                            <error type="SECURITY"/>
+                            <error type="CONNECTIVITY"/>
+                            <error type="BAD_REQUEST"/>
+                            <error type="UNAUTHORIZED"/>
+                            <error type="FORBIDDEN"/>
+                            <error type="METHOD_NOT_ALLOWED"/>
+                            <error type="NOT_FOUND"/>
+                            <error type="NOT_ACCEPTABLE"/>
+                            <error type="UNSUPPORTED_MEDIA_TYPE"/>
+                            <error type="TOO_MANY_REQUESTS"/>
+                            <error type="INTERNAL_SERVER_ERROR"/>
+                            <error type="SERVICE_UNAVAILABLE"/>
+                            <error type="RETRY_EXHAUSTED"/>
+                    </errors>
+    </operation>
+    <operation name="get-payment-slips"  >
+        <parameters>
+                                                <parameter name="request-streaming-mode" displayName="Request streaming mode" type="request-streaming-mode-enum" use="OPTIONAL" tab="Advanced" />
+        </parameters>
+        <body>
+                <http:request config-ref="studentapi-httpreq-config"
+              path="/paymentSlip"
+              method="GET"
+              requestStreamingMode='#[vars["request-streaming-mode"]]'
+>
+                <mule:error-mapping sourceType="HTTP:PARSING" targetType="STUDENTAPI:PARSING" />
+            <mule:error-mapping sourceType="HTTP:TIMEOUT" targetType="STUDENTAPI:TIMEOUT" />
+            <mule:error-mapping sourceType="HTTP:SECURITY" targetType="STUDENTAPI:SECURITY" />
+            <mule:error-mapping sourceType="HTTP:CONNECTIVITY" targetType="STUDENTAPI:CONNECTIVITY" />
+            <mule:error-mapping sourceType="HTTP:BAD_REQUEST" targetType="STUDENTAPI:BAD_REQUEST" />
+            <mule:error-mapping sourceType="HTTP:UNAUTHORIZED" targetType="STUDENTAPI:UNAUTHORIZED" />
+            <mule:error-mapping sourceType="HTTP:FORBIDDEN" targetType="STUDENTAPI:FORBIDDEN" />
+            <mule:error-mapping sourceType="HTTP:METHOD_NOT_ALLOWED" targetType="STUDENTAPI:METHOD_NOT_ALLOWED" />
+            <mule:error-mapping sourceType="HTTP:NOT_FOUND" targetType="STUDENTAPI:NOT_FOUND" />
+            <mule:error-mapping sourceType="HTTP:NOT_ACCEPTABLE" targetType="STUDENTAPI:NOT_ACCEPTABLE" />
+            <mule:error-mapping sourceType="HTTP:UNSUPPORTED_MEDIA_TYPE" targetType="STUDENTAPI:UNSUPPORTED_MEDIA_TYPE" />
+            <mule:error-mapping sourceType="HTTP:TOO_MANY_REQUESTS" targetType="STUDENTAPI:TOO_MANY_REQUESTS" />
+            <mule:error-mapping sourceType="HTTP:INTERNAL_SERVER_ERROR" targetType="STUDENTAPI:INTERNAL_SERVER_ERROR" />
+            <mule:error-mapping sourceType="HTTP:SERVICE_UNAVAILABLE" targetType="STUDENTAPI:SERVICE_UNAVAILABLE" />
+            <mule:error-mapping sourceType="HTTP:RETRY_EXHAUSTED" targetType="STUDENTAPI:RETRY_EXHAUSTED" />
+        
+            <http:headers>
+            <![CDATA[#[ { 'Accept': 'application/json' } filterObject $ != null ]]]>
+        </http:headers>
+            </http:request>
+    <mule:set-payload value="#[payload]" mimeType="application/json" />
+        </body>
+                    <output type="get-payment-slips-response-type" />
+                <output-attributes type="java::org.mule.extension.http.api.HttpResponseAttributes" />
+
+        <errors>
+                            <error type="PARSING"/>
+                            <error type="TIMEOUT"/>
+                            <error type="SECURITY"/>
+                            <error type="CONNECTIVITY"/>
+                            <error type="BAD_REQUEST"/>
+                            <error type="UNAUTHORIZED"/>
+                            <error type="FORBIDDEN"/>
+                            <error type="METHOD_NOT_ALLOWED"/>
+                            <error type="NOT_FOUND"/>
+                            <error type="NOT_ACCEPTABLE"/>
+                            <error type="UNSUPPORTED_MEDIA_TYPE"/>
+                            <error type="TOO_MANY_REQUESTS"/>
+                            <error type="INTERNAL_SERVER_ERROR"/>
+                            <error type="SERVICE_UNAVAILABLE"/>
+                            <error type="RETRY_EXHAUSTED"/>
+                    </errors>
+    </operation>
+    <operation name="create-payment-slip"  >
+        <parameters>
+                            <parameter name="create-payment-slip-request-data" type="create-payment-slip-request-type" use="REQUIRED" role="PRIMARY" />
+                                                <parameter name="request-streaming-mode" displayName="Request streaming mode" type="request-streaming-mode-enum" use="OPTIONAL" tab="Advanced" />
+        </parameters>
+        <body>
+                <http:request config-ref="studentapi-httpreq-config"
+              path="/paymentSlip"
+              method="POST"
+              requestStreamingMode='#[vars["request-streaming-mode"]]'
+>
+                <mule:error-mapping sourceType="HTTP:PARSING" targetType="STUDENTAPI:PARSING" />
+            <mule:error-mapping sourceType="HTTP:TIMEOUT" targetType="STUDENTAPI:TIMEOUT" />
+            <mule:error-mapping sourceType="HTTP:SECURITY" targetType="STUDENTAPI:SECURITY" />
+            <mule:error-mapping sourceType="HTTP:CONNECTIVITY" targetType="STUDENTAPI:CONNECTIVITY" />
+            <mule:error-mapping sourceType="HTTP:BAD_REQUEST" targetType="STUDENTAPI:BAD_REQUEST" />
+            <mule:error-mapping sourceType="HTTP:UNAUTHORIZED" targetType="STUDENTAPI:UNAUTHORIZED" />
+            <mule:error-mapping sourceType="HTTP:FORBIDDEN" targetType="STUDENTAPI:FORBIDDEN" />
+            <mule:error-mapping sourceType="HTTP:METHOD_NOT_ALLOWED" targetType="STUDENTAPI:METHOD_NOT_ALLOWED" />
+            <mule:error-mapping sourceType="HTTP:NOT_FOUND" targetType="STUDENTAPI:NOT_FOUND" />
+            <mule:error-mapping sourceType="HTTP:NOT_ACCEPTABLE" targetType="STUDENTAPI:NOT_ACCEPTABLE" />
+            <mule:error-mapping sourceType="HTTP:UNSUPPORTED_MEDIA_TYPE" targetType="STUDENTAPI:UNSUPPORTED_MEDIA_TYPE" />
+            <mule:error-mapping sourceType="HTTP:TOO_MANY_REQUESTS" targetType="STUDENTAPI:TOO_MANY_REQUESTS" />
+            <mule:error-mapping sourceType="HTTP:INTERNAL_SERVER_ERROR" targetType="STUDENTAPI:INTERNAL_SERVER_ERROR" />
+            <mule:error-mapping sourceType="HTTP:SERVICE_UNAVAILABLE" targetType="STUDENTAPI:SERVICE_UNAVAILABLE" />
+            <mule:error-mapping sourceType="HTTP:RETRY_EXHAUSTED" targetType="STUDENTAPI:RETRY_EXHAUSTED" />
+                <http:body>
+            <![CDATA[#[output application/json --- vars['create-payment-slip-request-data']]
+]]>
+        </http:body>
+    
+            <http:headers>
+            <![CDATA[#[ { 'Accept': 'application/json' } filterObject $ != null ]]]>
+        </http:headers>
+            </http:request>
+    <mule:set-payload value="#[payload]" mimeType="application/json" />
+        </body>
+                    <output type="string" />
+                <output-attributes type="java::org.mule.extension.http.api.HttpResponseAttributes" />
+
+        <errors>
+                            <error type="PARSING"/>
+                            <error type="TIMEOUT"/>
+                            <error type="SECURITY"/>
+                            <error type="CONNECTIVITY"/>
+                            <error type="BAD_REQUEST"/>
+                            <error type="UNAUTHORIZED"/>
+                            <error type="FORBIDDEN"/>
+                            <error type="METHOD_NOT_ALLOWED"/>
+                            <error type="NOT_FOUND"/>
+                            <error type="NOT_ACCEPTABLE"/>
+                            <error type="UNSUPPORTED_MEDIA_TYPE"/>
+                            <error type="TOO_MANY_REQUESTS"/>
+                            <error type="INTERNAL_SERVER_ERROR"/>
+                            <error type="SERVICE_UNAVAILABLE"/>
+                            <error type="RETRY_EXHAUSTED"/>
+                    </errors>
+    </operation>
+    <operation name="get-payment-slip-by-id"  >
+        <parameters>
+                                        <parameter name="id"
+                                        type="string"
+                                        use="REQUIRED"                    />
+                                    <parameter name="request-streaming-mode" displayName="Request streaming mode" type="request-streaming-mode-enum" use="OPTIONAL" tab="Advanced" />
+        </parameters>
+        <body>
+                <http:request config-ref="studentapi-httpreq-config"
+              path="/paymentSlip/{ID}"
+              method="GET"
+              requestStreamingMode='#[vars["request-streaming-mode"]]'
+>
+                <mule:error-mapping sourceType="HTTP:PARSING" targetType="STUDENTAPI:PARSING" />
+            <mule:error-mapping sourceType="HTTP:TIMEOUT" targetType="STUDENTAPI:TIMEOUT" />
+            <mule:error-mapping sourceType="HTTP:SECURITY" targetType="STUDENTAPI:SECURITY" />
+            <mule:error-mapping sourceType="HTTP:CONNECTIVITY" targetType="STUDENTAPI:CONNECTIVITY" />
+            <mule:error-mapping sourceType="HTTP:BAD_REQUEST" targetType="STUDENTAPI:BAD_REQUEST" />
+            <mule:error-mapping sourceType="HTTP:UNAUTHORIZED" targetType="STUDENTAPI:UNAUTHORIZED" />
+            <mule:error-mapping sourceType="HTTP:FORBIDDEN" targetType="STUDENTAPI:FORBIDDEN" />
+            <mule:error-mapping sourceType="HTTP:METHOD_NOT_ALLOWED" targetType="STUDENTAPI:METHOD_NOT_ALLOWED" />
+            <mule:error-mapping sourceType="HTTP:NOT_FOUND" targetType="STUDENTAPI:NOT_FOUND" />
+            <mule:error-mapping sourceType="HTTP:NOT_ACCEPTABLE" targetType="STUDENTAPI:NOT_ACCEPTABLE" />
+            <mule:error-mapping sourceType="HTTP:UNSUPPORTED_MEDIA_TYPE" targetType="STUDENTAPI:UNSUPPORTED_MEDIA_TYPE" />
+            <mule:error-mapping sourceType="HTTP:TOO_MANY_REQUESTS" targetType="STUDENTAPI:TOO_MANY_REQUESTS" />
+            <mule:error-mapping sourceType="HTTP:INTERNAL_SERVER_ERROR" targetType="STUDENTAPI:INTERNAL_SERVER_ERROR" />
+            <mule:error-mapping sourceType="HTTP:SERVICE_UNAVAILABLE" targetType="STUDENTAPI:SERVICE_UNAVAILABLE" />
+            <mule:error-mapping sourceType="HTTP:RETRY_EXHAUSTED" targetType="STUDENTAPI:RETRY_EXHAUSTED" />
+        
+            <http:headers>
+            <![CDATA[#[ { 'Accept': 'application/json' } filterObject $ != null ]]]>
+        </http:headers>
+                <http:uri-params>
+            <![CDATA[#[ { 'ID': vars['id'] } filterObject $ != null ]]]>
+        </http:uri-params>
+        </http:request>
+    <mule:set-payload value="#[payload]" mimeType="application/json" />
+        </body>
+                    <output type="get-payment-slip-by-id-response-type" />
+                <output-attributes type="java::org.mule.extension.http.api.HttpResponseAttributes" />
+
+        <errors>
+                            <error type="PARSING"/>
+                            <error type="TIMEOUT"/>
+                            <error type="SECURITY"/>
+                            <error type="CONNECTIVITY"/>
+                            <error type="BAD_REQUEST"/>
+                            <error type="UNAUTHORIZED"/>
+                            <error type="FORBIDDEN"/>
+                            <error type="METHOD_NOT_ALLOWED"/>
+                            <error type="NOT_FOUND"/>
+                            <error type="NOT_ACCEPTABLE"/>
+                            <error type="UNSUPPORTED_MEDIA_TYPE"/>
+                            <error type="TOO_MANY_REQUESTS"/>
+                            <error type="INTERNAL_SERVER_ERROR"/>
+                            <error type="SERVICE_UNAVAILABLE"/>
+                            <error type="RETRY_EXHAUSTED"/>
+                    </errors>
+    </operation>
+    <operation name="update-payment-slip-by-id"  >
+        <parameters>
+                            <parameter name="update-payment-slip-by-id-request-data" type="update-payment-slip-by-id-request-type" use="REQUIRED" role="PRIMARY" />
+                                        <parameter name="id"
+                                        type="string"
+                                        use="REQUIRED"                    />
+                                    <parameter name="request-streaming-mode" displayName="Request streaming mode" type="request-streaming-mode-enum" use="OPTIONAL" tab="Advanced" />
+        </parameters>
+        <body>
+                <http:request config-ref="studentapi-httpreq-config"
+              path="/paymentSlip/{ID}"
+              method="PUT"
+              requestStreamingMode='#[vars["request-streaming-mode"]]'
+>
+                <mule:error-mapping sourceType="HTTP:PARSING" targetType="STUDENTAPI:PARSING" />
+            <mule:error-mapping sourceType="HTTP:TIMEOUT" targetType="STUDENTAPI:TIMEOUT" />
+            <mule:error-mapping sourceType="HTTP:SECURITY" targetType="STUDENTAPI:SECURITY" />
+            <mule:error-mapping sourceType="HTTP:CONNECTIVITY" targetType="STUDENTAPI:CONNECTIVITY" />
+            <mule:error-mapping sourceType="HTTP:BAD_REQUEST" targetType="STUDENTAPI:BAD_REQUEST" />
+            <mule:error-mapping sourceType="HTTP:UNAUTHORIZED" targetType="STUDENTAPI:UNAUTHORIZED" />
+            <mule:error-mapping sourceType="HTTP:FORBIDDEN" targetType="STUDENTAPI:FORBIDDEN" />
+            <mule:error-mapping sourceType="HTTP:METHOD_NOT_ALLOWED" targetType="STUDENTAPI:METHOD_NOT_ALLOWED" />
+            <mule:error-mapping sourceType="HTTP:NOT_FOUND" targetType="STUDENTAPI:NOT_FOUND" />
+            <mule:error-mapping sourceType="HTTP:NOT_ACCEPTABLE" targetType="STUDENTAPI:NOT_ACCEPTABLE" />
+            <mule:error-mapping sourceType="HTTP:UNSUPPORTED_MEDIA_TYPE" targetType="STUDENTAPI:UNSUPPORTED_MEDIA_TYPE" />
+            <mule:error-mapping sourceType="HTTP:TOO_MANY_REQUESTS" targetType="STUDENTAPI:TOO_MANY_REQUESTS" />
+            <mule:error-mapping sourceType="HTTP:INTERNAL_SERVER_ERROR" targetType="STUDENTAPI:INTERNAL_SERVER_ERROR" />
+            <mule:error-mapping sourceType="HTTP:SERVICE_UNAVAILABLE" targetType="STUDENTAPI:SERVICE_UNAVAILABLE" />
+            <mule:error-mapping sourceType="HTTP:RETRY_EXHAUSTED" targetType="STUDENTAPI:RETRY_EXHAUSTED" />
+                <http:body>
+            <![CDATA[#[output application/json --- vars['update-payment-slip-by-id-request-data']]
+]]>
+        </http:body>
+    
+            <http:headers>
+            <![CDATA[#[ { 'Accept': 'application/json' } filterObject $ != null ]]]>
+        </http:headers>
+                <http:uri-params>
+            <![CDATA[#[ { 'ID': vars['id'] } filterObject $ != null ]]]>
+        </http:uri-params>
+        </http:request>
+    <mule:set-payload value="#[payload]" mimeType="application/json" />
+        </body>
+                    <output type="string" />
+                <output-attributes type="java::org.mule.extension.http.api.HttpResponseAttributes" />
+
+        <errors>
+                            <error type="PARSING"/>
+                            <error type="TIMEOUT"/>
+                            <error type="SECURITY"/>
+                            <error type="CONNECTIVITY"/>
+                            <error type="BAD_REQUEST"/>
+                            <error type="UNAUTHORIZED"/>
+                            <error type="FORBIDDEN"/>
+                            <error type="METHOD_NOT_ALLOWED"/>
+                            <error type="NOT_FOUND"/>
+                            <error type="NOT_ACCEPTABLE"/>
+                            <error type="UNSUPPORTED_MEDIA_TYPE"/>
+                            <error type="TOO_MANY_REQUESTS"/>
+                            <error type="INTERNAL_SERVER_ERROR"/>
+                            <error type="SERVICE_UNAVAILABLE"/>
+                            <error type="RETRY_EXHAUSTED"/>
+                    </errors>
+    </operation>
+    <operation name="delete-payment-slip-by-id"  >
+        <parameters>
+                                        <parameter name="id"
+                                        type="string"
+                                        use="REQUIRED"                    />
+                                    <parameter name="request-streaming-mode" displayName="Request streaming mode" type="request-streaming-mode-enum" use="OPTIONAL" tab="Advanced" />
+        </parameters>
+        <body>
+                <http:request config-ref="studentapi-httpreq-config"
+              path="/paymentSlip/{ID}"
+              method="DELETE"
+              requestStreamingMode='#[vars["request-streaming-mode"]]'
+>
+                <mule:error-mapping sourceType="HTTP:PARSING" targetType="STUDENTAPI:PARSING" />
+            <mule:error-mapping sourceType="HTTP:TIMEOUT" targetType="STUDENTAPI:TIMEOUT" />
+            <mule:error-mapping sourceType="HTTP:SECURITY" targetType="STUDENTAPI:SECURITY" />
+            <mule:error-mapping sourceType="HTTP:CONNECTIVITY" targetType="STUDENTAPI:CONNECTIVITY" />
+            <mule:error-mapping sourceType="HTTP:BAD_REQUEST" targetType="STUDENTAPI:BAD_REQUEST" />
+            <mule:error-mapping sourceType="HTTP:UNAUTHORIZED" targetType="STUDENTAPI:UNAUTHORIZED" />
+            <mule:error-mapping sourceType="HTTP:FORBIDDEN" targetType="STUDENTAPI:FORBIDDEN" />
+            <mule:error-mapping sourceType="HTTP:METHOD_NOT_ALLOWED" targetType="STUDENTAPI:METHOD_NOT_ALLOWED" />
+            <mule:error-mapping sourceType="HTTP:NOT_FOUND" targetType="STUDENTAPI:NOT_FOUND" />
+            <mule:error-mapping sourceType="HTTP:NOT_ACCEPTABLE" targetType="STUDENTAPI:NOT_ACCEPTABLE" />
+            <mule:error-mapping sourceType="HTTP:UNSUPPORTED_MEDIA_TYPE" targetType="STUDENTAPI:UNSUPPORTED_MEDIA_TYPE" />
+            <mule:error-mapping sourceType="HTTP:TOO_MANY_REQUESTS" targetType="STUDENTAPI:TOO_MANY_REQUESTS" />
+            <mule:error-mapping sourceType="HTTP:INTERNAL_SERVER_ERROR" targetType="STUDENTAPI:INTERNAL_SERVER_ERROR" />
+            <mule:error-mapping sourceType="HTTP:SERVICE_UNAVAILABLE" targetType="STUDENTAPI:SERVICE_UNAVAILABLE" />
+            <mule:error-mapping sourceType="HTTP:RETRY_EXHAUSTED" targetType="STUDENTAPI:RETRY_EXHAUSTED" />
+        
+            <http:headers>
+            <![CDATA[#[ { 'Accept': 'application/json' } filterObject $ != null ]]]>
+        </http:headers>
+                <http:uri-params>
+            <![CDATA[#[ { 'ID': vars['id'] } filterObject $ != null ]]]>
+        </http:uri-params>
+        </http:request>
+    <mule:set-payload value="#[payload]" mimeType="application/json" />
+        </body>
+                    <output type="string" />
+                <output-attributes type="java::org.mule.extension.http.api.HttpResponseAttributes" />
+
+        <errors>
+                            <error type="PARSING"/>
+                            <error type="TIMEOUT"/>
+                            <error type="SECURITY"/>
+                            <error type="CONNECTIVITY"/>
+                            <error type="BAD_REQUEST"/>
+                            <error type="UNAUTHORIZED"/>
+                            <error type="FORBIDDEN"/>
+                            <error type="METHOD_NOT_ALLOWED"/>
+                            <error type="NOT_FOUND"/>
+                            <error type="NOT_ACCEPTABLE"/>
+                            <error type="UNSUPPORTED_MEDIA_TYPE"/>
+                            <error type="TOO_MANY_REQUESTS"/>
+                            <error type="INTERNAL_SERVER_ERROR"/>
+                            <error type="SERVICE_UNAVAILABLE"/>
+                            <error type="RETRY_EXHAUSTED"/>
+                    </errors>
+    </operation>
+
+</module>
